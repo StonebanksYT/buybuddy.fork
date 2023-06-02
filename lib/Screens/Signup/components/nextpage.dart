@@ -1,3 +1,4 @@
+///This is a Flutter code for a sign-up page. It imports necessary packages such as FirebaseAuth, FirebaseDatabase, Flutter, Get, Fluttertoast, and UserIdController. It defines a FieldStyle widget that creates a text field with a label and a border. The NextPageOfSignUpPage widget is a stateful widget that fetches user credentials from the sign-up body and creates a new user account in Firebase Authentication and Firebase Realtime Database. It also allows the user to choose between creating a school or college account and fills in the necessary details such as the school or college name and address. Finally, it has two buttons for going back and creating the account.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';

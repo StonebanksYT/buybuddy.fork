@@ -31,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// Variables
   VisibilityController visibilityController = Get.put(VisibilityController());
   Controller controller = Get.put(Controller());
-  UserIdController userIdController=Get.find<UserIdController>();
+  UserIdController userIdController=Get.put(UserIdController());
 
   List<Widget> pages = [
     PersonalInfo(),

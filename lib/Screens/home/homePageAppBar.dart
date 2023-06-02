@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'textFieldContainer.dart';
+import 'package:flutter_auth/Screens/sell/productForm.dart';
 
 class HomePageAppBar extends StatelessWidget{
   HomePageAppBar({Key? key}) : super(key: key);
@@ -24,17 +25,24 @@ class HomePageAppBar extends StatelessWidget{
               child: Row(
                 children: [
                   customButton(Icons.home, "HOME"),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  // const SizedBox(
+                  //   width: 10,
+                  // ),
+                   SizedBox(width: 30,child: ElevatedButton(onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return ProductForm();
+                    },));
+                  },child: Text("d"),),),
                   customButton(Icons.shopping_cart, "CART"),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  // const SizedBox(
+                  //   width: 10,
+                  // ),
                   const SearchBar(),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                 
+
+                  // const SizedBox(
+                  //   width: 10,
+                  // ),
                   customButton(Icons.category, "FILTER"),
                   const SizedBox(
                     width: 10,

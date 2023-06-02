@@ -4,6 +4,7 @@ import 'package:flutter_auth/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'Screens/profile/profile.dart';
 import 'firebase_options.dart';
+import 'Screens/home/dashboard/dashboard.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -45,8 +46,8 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-          home: WelcomeScreen(),
-      // home: ProfileScreen(),
+          home: ProfileScreen(),
+      // home: WelcomeScreen(),
     );
   }
 }
