@@ -1,14 +1,41 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_auth/Screens/home/dashboard/productSection/firebaseStorage.dart';
+import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:file_picker/file_picker.dart';
 
-class ProductForm extends StatelessWidget {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  UserIdController userIdController = Get.put(UserIdController());
+class ProductForm extends StatefulWidget {
+  ProductForm({Key? key}) : super(key: key);
+
+  @override
+  State<ProductForm> createState() => _ProductFormState();
+}
+
+class _ProductFormState extends State<ProductForm> {
+  final TextEditingController titleController = TextEditingController();
+
+  final TextEditingController priceController = TextEditingController();
+
+  final TextEditingController descriptionController = TextEditingController();
+
+  final UserIdController userIdController = Get.put(UserIdController());
+    final Storage storage = Storage();
+
+  Controller controller = Get.put(Controller());
+  Uint8List? selectedFileInBytes=Uint8List(2);
+  Future<void> filePicker()async{
+  final results = await FilePicker.platform.pickFiles(
+                    allowMultiple: false,
+                    type: FileType.custom,
+                    allowedExtensions: ["png", "jpg"]);
+// converting picked file into byte data so that it could work on web app
+  selectedFileInBytes=results!.files.first.bytes;   
+  await storage.uploadFile(selectedFileInBytes, results.files.first.name);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,10 +46,20 @@ class ProductForm extends StatelessWidget {
           CustomField(priceController),
           CustomField(descriptionController),
           SizedBox(
+            width: 100,
+            height: 35,
+            child: ElevatedButton(
+              /// picking the file and uploading the file on firebase storage
+              onPressed: filePicker,
+              child: const Text("photoes"),
+            ),
+          ),
+          SizedBox(
             height: 35,
             width: 100,
             child: ElevatedButton(
               onPressed: () async {
+                /// fireStore setup and adding product data to a particular user
                 var title = titleController.text.trim();
                 var price = priceController.text.trim();
                 var description = descriptionController.text.trim();
@@ -39,7 +76,7 @@ class ProductForm extends StatelessWidget {
                       userDocRef.collection('products');
                   await productsRef.doc().set({
                     'title': title,
-                    'price':price,
+                    'price': price,
                     'description': description,
                   });
                   Navigator.of(context).pop();
@@ -47,7 +84,7 @@ class ProductForm extends StatelessWidget {
                   print(e);
                 }
               },
-              child: Text("Creat Ad"),
+              child: const Text("Creat Ad"),
             ),
           )
         ],
@@ -61,4 +98,11 @@ class ProductForm extends StatelessWidget {
       child: TextFormField(controller: controller),
     );
   }
+}
+
+class CustomImage {
+  Uint8List imageData;
+  int id;
+
+  CustomImage({required this.imageData, required this.id});
 }

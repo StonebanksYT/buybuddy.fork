@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchField extends StatelessWidget {
-  TextInputType keyboardType;
-  TextInputAction textInputAction;
-  Function(String)? onChanged;
-  String? hintText;
-  TextEditingController controller;
+  final TextInputType keyboardType;
+  final TextInputAction textInputAction;
+  final Function(String)? onChanged;
+  final String? hintText;
+  final TextEditingController controller;
   SearchField(
       {Key? key,
       required this.keyboardType,
@@ -15,7 +15,7 @@ class SearchField extends StatelessWidget {
       this.onChanged,
       this.hintText})
       : super(key: key);
-  Color textFilledColor = const Color(0xfff1f1f1);
+  final Color textFilledColor = const Color(0xfff1f1f1);
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -69,8 +69,8 @@ class SearchField extends StatelessWidget {
 }
 
 class CustomTabButton extends StatelessWidget {
-  String tabName;
-  IconData icon;
+  final String tabName;
+  final IconData icon;
   CustomTabButton({required this.tabName, required this.icon});
   @override
   Widget build(BuildContext context) {
@@ -96,51 +96,3 @@ class CustomTabButton extends StatelessWidget {
         ));
   }
 }
-class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,height: 200,color: Colors.pink,
-    );
-  }
-}
-
-// class ProductCard extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 200,
-//       width: 250,
-//       color: Color(0xff574141),
-//       child: Column(children: [
-//         SizedBox(
-//           height: 3,
-//         ),
-//         Container(
-//           width: 240,
-//           height: 150,
-//           color: Colors.blue,
-//         ),
-//         Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text("Title"),
-//             Text("Price"),
-//             Row(
-//               children: [
-//                 SizedBox(
-//                   width: 110,
-//                   child: ElevatedButton(
-//                       onPressed: () {}, child: Text("Check out")),
-//                 ),
-//                 IconButton(onPressed: () {}, icon: Icon(Icons.lock))
-//               ],
-//             )
-//           ],
-//         )
-//       ]),
-//     );
-//   }
-// }

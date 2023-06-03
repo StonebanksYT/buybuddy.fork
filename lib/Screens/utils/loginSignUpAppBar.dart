@@ -4,7 +4,7 @@ import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 class LoginSignUpAppBar extends StatelessWidget{
   LoginSignUpAppBar({Key? key,required this.isLogin}) : super(key: key);
-  bool isLogin;
+ final  bool isLogin;
   @override
   Widget build(BuildContext context) {
     return Container(

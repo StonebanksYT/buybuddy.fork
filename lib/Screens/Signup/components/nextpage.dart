@@ -12,8 +12,8 @@ import 'package:flutter_auth/controllers/userIdController.dart';
 Color textFilledColor = const Color(0xfff1f1f1);
 
 class FieldStyle extends StatelessWidget {
-  String fieldName;
-  TextEditingController controller;
+ final  String fieldName;
+ final  TextEditingController controller;
   FieldStyle({Key? key, required this.fieldName, required this.controller})
       : super(key: key);
 
@@ -61,11 +61,11 @@ class FieldStyle extends StatelessWidget {
 
 class NextPageOfSignUpPage extends StatefulWidget {
   // fetching user credentials from sign up body
-  String firstName;
-  String lastName;
-  String mobileNumber;
-  String emailAddress;
-  String password;
+ final  String firstName;
+ final  String lastName;
+  final String mobileNumber;
+ final  String emailAddress;
+  final String password;
   NextPageOfSignUpPage(
       {Key? key,
       required this.firstName,
@@ -79,7 +79,6 @@ class NextPageOfSignUpPage extends StatefulWidget {
 }
 
 class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   var instituteNameController = TextEditingController();
   var instituteLocationController = TextEditingController();
   Controller controller = Get.put(Controller());

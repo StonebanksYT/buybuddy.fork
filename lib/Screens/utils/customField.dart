@@ -3,15 +3,15 @@ import 'package:flutter_auth/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextField extends StatelessWidget {
-  double width;
-  String FieldName;
-  bool isObscure;
-  TextInputType keyboardType;
-  TextInputAction textInputAction;
-  Function(String)? onChanged;
-  String? hintText;
-  String? Function(String?)? validator;
-  TextEditingController controller;
+  final double width;
+ final  String FieldName;
+ final  bool isObscure;
+  final TextInputType keyboardType;
+  final TextInputAction textInputAction;
+  final Function(String)? onChanged;
+  final String? hintText;
+ final  String? Function(String?)? validator;
+ final  TextEditingController controller;
   CustomTextField(
       {Key? key,
       required this.validator,

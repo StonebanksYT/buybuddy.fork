@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/profile/profileutils/profileConstants.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 ButtonStyle CustomElevatedBtnStyle() {
   return ButtonStyle(

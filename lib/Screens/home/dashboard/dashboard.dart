@@ -1,64 +1,130 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/home/dashboard/dashboardUtils.dart';
+import 'package:flutter_auth/Screens/appbar/dashboardAppBar.dart';
+import 'package:flutter_auth/Screens/home/dashboard/filterSide/filter.dart';
+import 'package:flutter_auth/Screens/home/dashboard/productSection/productCard.dart';
+import 'package:flutter_auth/Screens/home/dashboard/productSection/productConstants.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 class DashBoard extends StatelessWidget {
+  const DashBoard({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print("dashboard build");
     return Scaffold(
       body: Column(
         children: [
-          Text("Dashboard"),
-          // // Generated code for this Row Widget...
-          Align(
-            alignment: AlignmentDirectional(0, 0),
+          /// Dashboard appbar
+          const DashboardAppBar(),
+
+          /// Main Dashboard which have filters, products, ads sections
+          Expanded(
             child: Row(
-              // mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                /// this is the main filter container in which all types of filters exists
                 Container(
-                  width: 262,
-                  height: 500,
-                  color: Colors.green,
+                  width: 200,
+                  decoration: BoxDecoration(
+                      border: Border(
+                          right: BorderSide(
+                              width: 0.3,
+                              color: Colors.grey.withOpacity(0.5)))),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /// this is the product category filter section
+                        filterHeading("Categories"),
+                        CategorySelectionPage(),
+
+                        /// Border line
+                        Container(
+                          height: 1,
+                          decoration: BoxDecoration(
+                              boxShadow: const [
+                                BoxShadow(
+                                    spreadRadius: 0, color: Colors.transparent)
+                              ],
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      width: 0.5))),
+                        ),
+
+                        /// this is the location filter
+                        filterHeading("Location"),
+                        LocationFilterPage()
+                      ],
+                    ),
+                  ),
                 ),
-                   Container(
-                    height: 400,
-                    color: Color.fromARGB(255, 159, 43, 43),
-                    child:GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), itemBuilder: (context, index) {
-                      
-                      return Container(width: 100,height: 100,color: Colors.green,);
-                    },)),
-                  
-                // Expanded(
-                //   child: Container(
-                //     width: 500,
-                //     color: Colors.white,
-                //     child: GridView.builder(
-                //       padding: EdgeInsets.zero,
-                //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //         crossAxisCount: 3,
-                //         crossAxisSpacing: 10,
-                //         mainAxisSpacing: 10,
-                //         childAspectRatio: 1,
-                //       ),
-                //       shrinkWrap: true,
-                //       scrollDirection: Axis.vertical,
-                //       itemBuilder: (context, index) {
-                //         return ProductCard();
-                //       },
-                //     ),
-                //   ),
-                // ),
-                Container(
-                  width: 258,
-                  height: 500,
-                  color: Colors.blue,
+
+                /// This expanded holds both the products and ads section
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // product section
+                        SizedBox(
+                          width: size.width - 500,
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3, mainAxisExtent: 330),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: productImgLink.length,
+                            itemBuilder: (context, index) {
+                              return ProductCard(
+                                imgLink: productImgLink[index],
+                              );
+                            },
+                          ),
+                        ),
+
+                        /// ads section
+                        Container(
+                          width: 300,
+                          color: const Color(0xffdfdfdc),
+                          child: const Column(
+                            children: [
+                              Text('Right Column'),
+                              SizedBox(height: 600),
+                              Text('Item 1'),
+                              SizedBox(height: 20),
+                              Text('Item 2'),
+                              SizedBox(height: 20),
+                              Text('Item 3'),
+                              SizedBox(height: 20),
+                              Text('Item 4'),
+                              SizedBox(height: 20),
+                              Text('Item 5'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-          )
-        
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget filterHeading(String heading) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, top: 8),
+      child: Text(
+        heading,
+        style: GoogleFonts.getFont("Poppins",
+            fontWeight: FontWeight.bold, fontSize: 14),
       ),
     );
   }

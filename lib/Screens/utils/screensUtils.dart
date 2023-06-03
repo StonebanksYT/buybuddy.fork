@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/utils/loginSignUpComponents.dart';
 
 Map fieldValidations = {

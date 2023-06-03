@@ -1,0 +1,6 @@
+{
+    "json.schemas": [
+    
+    ],
+    "editor.codeActionsOnSave": {"source.fixAll": true}
+}

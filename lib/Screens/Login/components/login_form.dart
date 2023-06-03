@@ -13,7 +13,7 @@ class LoginForm extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  UserIdController userIdController = Get.put(UserIdController());
+ final  UserIdController userIdController = Get.put(UserIdController());
 
   @override
   Widget build(BuildContext context) {

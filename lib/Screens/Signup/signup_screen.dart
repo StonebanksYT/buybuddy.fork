@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth/responsive.dart';
 import 'components/sign_up_top_image.dart';
 import 'components/signUpPagebody.dart';
-import 'package:flutter_auth/Screens/utils/loginSignUpAppBar.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);

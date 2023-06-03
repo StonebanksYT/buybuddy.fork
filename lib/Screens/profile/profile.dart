@@ -26,204 +26,265 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /// Variables
   VisibilityController visibilityController = Get.put(VisibilityController());
   Controller controller = Get.put(Controller());
-  UserIdController userIdController=Get.put(UserIdController());
-
+  UserIdController userIdController = Get.put(UserIdController());
   List<Widget> pages = [
     PersonalInfo(),
     const YourOrders(),
     const YourProducts()
   ];
-  late DatabaseReference _userRef;
-  @override
-  void initState() {
-    super.initState();
+  /// since the data is getting fetched from firebase realtime database, a future method is used to wait for the data
+  Future<Widget> profileScreen() async {
+    try {
+      Controller controller = Get.put(Controller());
+      UserIdController userIdController = Get.put(UserIdController());
 
-    /// fetching user data corresponding to the user currently logged in
-    _userRef =
-        FirebaseDatabase.instance.ref().child("users").child(userIdController.userid.value);
-    _userRef.onValue.listen((event) {
-      Object? data = event.snapshot.value;
-      Map<String, dynamic> dataMap = data as Map<String, dynamic>;
-      // storing profile information from firebase into controller
-      controller.setUserModel(UserModel(
-          firstName: "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
-          lastName: "${dataMap["lastName"][0].toUpperCase() + dataMap["lastName"].substring(1)}",
-          mobileNumber: dataMap["mobileNumber"],
-          email: dataMap["email"],
-          instituteType: dataMap["instituteType"],
-          instituteName: "${dataMap["instituteName"][0].toUpperCase() + dataMap["instituteName"].substring(1)}",
-          instituteLocation: "${dataMap["instituteLocation"][0].toUpperCase() + dataMap["instituteLocation"].substring(1)}"));
-    });
+      /// fetching user data corresponding to the user currently logged in
+      DatabaseReference userRef = FirebaseDatabase.instance
+          .ref()
+          .child("users")
+          .child(userIdController.userid.value);
+
+      /// delaying the execution of the code until the userRef has completed its operation
+      await Future.delayed(Duration.zero, () {
+        userRef.onValue.listen((event) {
+          Object? data = event.snapshot.value;
+          Map<String, dynamic> dataMap = data as Map<String, dynamic>;
+          // storing profile information from firebase into controller
+          controller.setUserModel(UserModel(
+              firstName:
+                  "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
+              lastName:
+                  "${dataMap["lastName"][0].toUpperCase() + dataMap["lastName"].substring(1)}",
+              mobileNumber: dataMap["mobileNumber"],
+              email: dataMap["email"],
+              instituteType: dataMap["instituteType"],
+              instituteName:
+                  "${dataMap["instituteName"][0].toUpperCase() + dataMap["instituteName"].substring(1)}",
+              instituteLocation:
+                  "${dataMap["instituteLocation"][0].toUpperCase() + dataMap["instituteLocation"].substring(1)}"));
+        });
+      });
+    } catch (e) {
+      Text("${e}");
+    }
+    return Container();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(245, 247, 248, 1),
-      endDrawer: SideBarMenu(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            HomePageAppBar(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(230, 20, 230, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return FutureBuilder(
+
+        /// taking homePage function as future value which contains data of homepage function
+        future: profileScreen(),
+        builder: (context, snapshot) {
+          /// Future with no errors
+          if (snapshot.connectionState == ConnectionState.done &&
+              !snapshot.hasError) {
+            final data = snapshot.data;
+            if (data == null) {
+              return Container(
+                child: const Text('Empty loaded'),
+              );
+            } else {
+              return Scaffold(
+                backgroundColor: const Color.fromRGBO(245, 247, 248, 1),
+                endDrawer: SideBarMenu(),
+                body: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("buyBuddy Account",
-                              style: GoogleFonts.getFont(
-                                "Nunito",
-                                textStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              )),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SizedBox(
-                                height: 35,
-                                width: 100,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return EditProfileDialog(
-                                            instituteLocation:controller.userModel.value.instituteLocation,
-                                            instituteName: controller
-                                                .userModel.value.instituteName,
-                                            language: "English, Hindi",
-                                            mobileNumber: controller
-                                                .userModel.value.mobileNumber,
-                                            firstName: controller
-                                                .userModel.value.firstName,
-                                            lastName: controller
-                                                .userModel.value.lastName,
-                                          );
-                                        }).then((value) => setState(() {
-                                          if (value == null) {
-                                            /// Takes care of the situation when no theme is selected.
-                                            return;
-                                          } else {
-                                            print("value ${value}");
-                                          }
-                                        }));
-                                  },
-                                  style: CustomElevatedBtnStyle(),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      const Icon(Icons.edit),
-                                      Text("Edit",
-                                          style: GoogleFonts.getFont("Nunito"))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              SizedBox(
-                                height: 35,
-                                width: 100,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: ((context) {
-                                      return const SignUpScreen();
-                                    })));
-                                  },
-                                  style: CustomElevatedBtnStyle(),
-                                  child: Text("Sign Out",
-                                      style: GoogleFonts.getFont("Nunito")),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Expanded(
-                        flex: 1,
+                      HomePageAppBar(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(230, 20, 230, 0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const CircleAvatar(
-                                backgroundColor:
-                                    Color.fromRGBO(231, 233, 237, 1),
-                                radius: 50,
-                                child: Icon(
-                                  Icons.person,
-                                  size: 50,
-                                  color: Colors.white,
-                                )),
-                            const SizedBox(
-                              height: 10,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("buyBuddy Account",
+                                        style: GoogleFonts.getFont(
+                                          "Nunito",
+                                          textStyle: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        SizedBox(
+                                          height: 35,
+                                          width: 100,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return EditProfileDialog(
+                                                      instituteLocation:
+                                                          controller
+                                                              .userModel
+                                                              .value
+                                                              .instituteLocation,
+                                                      instituteName: controller
+                                                          .userModel
+                                                          .value
+                                                          .instituteName,
+                                                      language:
+                                                          "English, Hindi",
+                                                      mobileNumber: controller
+                                                          .userModel
+                                                          .value
+                                                          .mobileNumber,
+                                                      firstName: controller
+                                                          .userModel
+                                                          .value
+                                                          .firstName,
+                                                      lastName: controller
+                                                          .userModel
+                                                          .value
+                                                          .lastName,
+                                                    );
+                                                  }).then((value) => setState(
+                                                      () {
+                                                    if (value == null) {
+                                                      /// Takes care of the situation when no theme is selected.
+                                                      return;
+                                                    } else {
+                                                      print("value ${value}");
+                                                    }
+                                                  }));
+                                            },
+                                            style: CustomElevatedBtnStyle(),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                const Icon(Icons.edit),
+                                                Text("Edit",
+                                                    style: GoogleFonts.getFont(
+                                                        "Nunito"))
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        SizedBox(
+                                          height: 35,
+                                          width: 100,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) {
+                                                return const SignUpScreen();
+                                              })));
+                                            },
+                                            style: CustomElevatedBtnStyle(),
+                                            child: Text("Sign Out",
+                                                style: GoogleFonts.getFont(
+                                                    "Nunito")),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Obx(
-                              () {
-                                return CustomText(
-                                  text:
-                                      "${controller.userModel.value.firstName} ${controller.userModel.value.lastName}",
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w800,
-                                );
-                              },
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Obx(() {
-                              return CustomText(
-                                text: controller.userModel.value.email,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                                textColor:
-                                    const Color.fromARGB(255, 167, 161, 161),
-                              );
-                            }),
                             const SizedBox(
                               height: 30,
                             ),
-                            ProfileInfo()
+                            Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const CircleAvatar(
+                                              backgroundColor: Color.fromRGBO(
+                                                  231, 233, 237, 1),
+                                              radius: 50,
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 50,
+                                                color: Colors.white,
+                                              )),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Obx(
+                                            () {
+                                              return CustomText(
+                                                text:
+                                                    "${controller.userModel.value.firstName} ${controller.userModel.value.lastName}",
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w800,
+                                              );
+                                            },
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Obx(() {
+                                            return CustomText(
+                                              text: controller
+                                                  .userModel.value.email,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.normal,
+                                              textColor: const Color.fromARGB(
+                                                  255, 167, 161, 161),
+                                            );
+                                          }),
+                                          const SizedBox(
+                                            height: 30,
+                                          ),
+                                          ProfileInfo()
+                                        ],
+                                      )),
+                                  const SizedBox(
+                                    width: 45,
+                                  ),
+                                  Obx(() {
+                                    return Expanded(
+                                        flex: 3,
+                                        child: SingleChildScrollView(
+                                          child: pages[visibilityController
+                                              .visibilityIndex.value],
+                                        ));
+                                  })
+                                ]),
                           ],
-                        )),
-                    const SizedBox(
-                      width: 45,
-                    ),
-                    Obx(() {
-                      return Expanded(
-                          flex: 3,
-                          child: SingleChildScrollView(
-                            child: pages[
-                                visibilityController.visibilityIndex.value],
-                          ));
-                    })
-                  ]),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasError) {
+            return Text("The error ${snapshot.error} has occured");
+          } else {
+            /// Returning loading screen when program needs to wait while loading the next Screen
+            return const CircularProgressIndicator();
+          }
+        });
   }
 }

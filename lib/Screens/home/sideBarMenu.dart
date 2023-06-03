@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/Screens/profile/profile.dart';
-import 'package:get/get.dart';
 
-class SideBarMenu extends StatelessWidget {
+class SideBarMenu extends StatefulWidget {
   SideBarMenu({Key? key}) : super(key: key);
+
+  @override
+  State<SideBarMenu> createState() => _SideBarMenuState();
+}
+
+class _SideBarMenuState extends State<SideBarMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -26,8 +31,10 @@ class SideBarMenu extends StatelessWidget {
           title: const Center(child: Text('Profile')),
           onTap: () {
             Navigator.pop(context);
+
             Navigator.push(context, MaterialPageRoute(builder: ((context) {
-              return ProfileScreen();
+          
+              return  ProfileScreen();
             })));
           },
         ),

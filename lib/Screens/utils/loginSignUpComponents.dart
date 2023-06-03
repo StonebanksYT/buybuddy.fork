@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GoogleConnect extends StatelessWidget {
-  bool isLogin;
-  Function() onTap;
+ final  bool isLogin;
+ final  Function() onTap;
   GoogleConnect({Key? key, required this.isLogin, required this.onTap})
       : super(key: key);
 

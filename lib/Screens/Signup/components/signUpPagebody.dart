@@ -21,16 +21,15 @@ extension EmailValidator on String {
 
 class SignUpPageBody extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  var firstNameController = TextEditingController();
-  var lastNameController = TextEditingController();
-  var mobileNumberController = TextEditingController();
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-  var confirmPasswordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final  lastNameController = TextEditingController();
+  final  mobileNumberController = TextEditingController();
+  final  emailController = TextEditingController();
+  final  passwordController = TextEditingController();
+  final  confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Column(
       children: [
         LoginSignUpAppBar(
