@@ -1,6 +1,12 @@
+///The LoginForm widget is a stateful widget that contains a form with two text fields for email and password. The email field is validated to ensure that it is not empty and is a valid email address. The password field is also validated to ensure that it is not empty and includes at least one special character, capital letter, and number.
+
+// The form is wrapped in a SingleChildScrollView widget to allow for scrolling. The ElevatedButton widget is used to submit the form and authenticate the user. If the authentication is successful, the user is redirected to the HomePage widget. If there is an error, a customSnackBar is displayed to inform the user of the error.
+
+// The LoginForm widget also uses the UserIdController to set the user ID after successful authentication. The GoogleConnect widget is also included to allow the user to sign in with their Google account.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_auth/backend/firebaseAuthentications/firebaseLogin.dart';
+import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:get/get.dart';
 import '../../home/home.dart';
@@ -12,16 +18,17 @@ class LoginForm extends StatelessWidget {
   LoginForm({
     Key? key,
   }) : super(key: key);
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
  final  UserIdController userIdController = Get.put(UserIdController());
-
+ Controller controller=Get.put(Controller());
+ var emailController = TextEditingController();
+    var passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     print("on login form");
     BuildContext SnackContext = context;
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
-    return Container(
+    List firebaseLoginParameters=[emailController,passwordController,context,SnackContext,userIdController];
+    return SizedBox(
       width: 410,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,28 +115,15 @@ class LoginForm extends StatelessWidget {
           SizedBox(
             width: 80,
             height: 40,
-            child: ElevatedButton(
-              onPressed: () async {
-                try {
-                  final credential = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim());
-                  userIdController.setUserId(credential.user!.uid);
-                  print(credential.user!.uid);
-                  // NyCROzsBnsSsyE6LvbmjpONECjt2
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return HomePage();
-                  }));
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'user-not-found') {
-                    customSnackBar(
-                        SnackContext, "No user found for that email.");
-                  } else if (e.code == 'wrong-password') {
-                    customSnackBar(
-                        SnackContext, "Wrong password provided for that user.");
-                  }
-                }
+            child: ElevatedButton(onPressed: ()async{
+               controller.setloginLoading(true);
+                await FirebaseLogin(emailController: emailController, passwordController: passwordController, snackContext: SnackContext, context: context, userIdController: userIdController).firebaseLogin();
+                // if(auth.currentUser != null){
+                //   Navigator.push(context, MaterialPageRoute(builder: (ctx)=>const EmailVerificationScreen()));
+                // }
+                // setState(() {
+                //   _isLoading = false;
+                // });
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -139,12 +133,13 @@ class LoginForm extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   backgroundColor: Colors.white,
                   shadowColor: Colors.white),
-              child: const Text(
+              child: controller.loginLoading.value ? const CircularProgressIndicator():const  Text(
                 "Login",
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
             ),
+  
           ),
           const SizedBox(
             height: 100,

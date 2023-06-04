@@ -1,0 +1,93 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/home/home.dart';
+import 'package:flutter_auth/Screens/utils/loginSignUpComponents.dart';
+
+class EmailVerificationScreen extends StatefulWidget {
+  const EmailVerificationScreen({Key? key}) : super(key: key);
+
+  @override
+  State<EmailVerificationScreen> createState() =>
+      _EmailVerificationScreenState();
+}
+
+class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
+  bool isEmailVerified = false;
+  late Timer? timer;
+  bool canResendEmail=false;
+  Future sendVerificationEmail() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      await user.sendEmailVerification();
+      setState((){
+       canResendEmail=false;
+
+      });
+       await Future.delayed(Duration(seconds: 5));
+       setState(() {
+         canResendEmail=true;
+       });
+    } catch (e) {
+      customSnackBar(context, e.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    if (!isEmailVerified) {
+      sendVerificationEmail();
+      timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+        return checkEmailVerified();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  Future checkEmailVerified() async {
+    await FirebaseAuth.instance.currentUser!.reload();
+    setState(() {
+      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    });
+    if (isEmailVerified) timer?.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isEmailVerified
+        ? HomePage()
+        : Scaffold(
+            appBar: AppBar(title: const Text("Email Verification")),
+            body: Center(
+              child: Column(children: [
+                const Text("A verification email has been sent"),
+                SizedBox(
+                  height: 30,
+                  width: 100,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.email),
+                    label: const Text("Resend Email"),
+                    onPressed: canResendEmail?sendVerificationEmail:(){},
+                  ),
+                ),
+                 SizedBox(
+                  height: 30,
+                  width: 100,
+                  child: TextButton(child: Text("Cancel"),onPressed: ()async{
+                    return await FirebaseAuth.instance.signOut();
+                  },),
+                )
+              ]),
+            ),
+          );
+  }
+}

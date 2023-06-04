@@ -3,6 +3,8 @@
 /// checks are: password matches confirm password
 
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/controllers/controllers.dart';
+import 'package:get/get.dart';
 import 'nextpage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_auth/Screens/utils/customField.dart';
@@ -27,7 +29,7 @@ class SignUpPageBody extends StatelessWidget {
   final  emailController = TextEditingController();
   final  passwordController = TextEditingController();
   final  confirmPasswordController = TextEditingController();
-
+  Controller controller=Get.put(Controller());
   @override
   Widget build(BuildContext context) {
     return Column(
