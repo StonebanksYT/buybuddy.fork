@@ -15,6 +15,14 @@ class Controller extends GetxController{
   setInstituteType(String iType){
     instituteType.value=iType;
   }
+  RxString instituteName="".obs;
+  setInstituteName(String iType){
+    instituteName.value=iType;
+  }
+  RxString instituteLocation="".obs;
+  setInstituteLocation(String iType){
+    instituteLocation.value=iType;
+  }
    RxString locationFilterValue = "Institute".obs;
   setLocationFilterValue(String value) {
     locationFilterValue.value = value;
@@ -27,5 +35,13 @@ class Controller extends GetxController{
 
   removeCategoryFilterlist(String value) {
     categoryFilterList.remove(value);
+  }
+  RxBool loginLoading=false.obs;
+  setloginLoading(bool value){
+    loginLoading.value=value;
+  }
+  RxBool signUpLoading=false.obs;
+  setsignUpLoading(bool value){
+    signUpLoading.value=value;
   }
 }
