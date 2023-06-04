@@ -12,7 +12,9 @@ class DashboardAppBar extends StatelessWidget {
     return Container(
       width: size.width,
       decoration: BoxDecoration(
-          boxShadow: const [BoxShadow(spreadRadius: 0, color: Colors.transparent)],
+          boxShadow: const [
+            BoxShadow(spreadRadius: 0, color: Colors.transparent)
+          ],
           border: Border(
               bottom:
                   BorderSide(color: Colors.grey.withOpacity(0.5), width: 0.5)),
@@ -29,8 +31,8 @@ class DashboardAppBar extends StatelessWidget {
               style: GoogleFonts.getFont("Poppins",
                   fontSize: 20, color: Colors.black),
             )),
-        const SizedBox(
-          width: 200,
+        SizedBox(
+          width: size.width * 0.45,
         ),
         Container(
           width: 300,
@@ -47,7 +49,7 @@ class DashboardAppBar extends StatelessWidget {
           width: 50,
         ),
         SizedBox(
-          width: 100,
+            width: 100,
             height: 40,
             child: CustomTabButton(
               icon: Icons.home,
@@ -57,15 +59,14 @@ class DashboardAppBar extends StatelessWidget {
           width: 20,
         ),
         SizedBox(
-          width: 100,
-
+            width: 100,
             height: 40,
             child: CustomTabButton(
               icon: Icons.shopping_cart_checkout_outlined,
               tabName: "Cart",
             )),
         const SizedBox(
-          width: 220,
+          width: 80,
         ),
         Row(
           children: [
@@ -86,9 +87,9 @@ class DashboardAppBar extends StatelessWidget {
           ],
         ),
         const SizedBox(
-          width: 10,
+          width: 20,
         ),
-        const Icon(Icons.menu)
+        InkWell(onTap: () {}, child: const Icon(Icons.menu))
       ]),
     );
   }
