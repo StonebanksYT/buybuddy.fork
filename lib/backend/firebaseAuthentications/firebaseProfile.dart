@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
+import 'package:flutter_auth/models/userModel.dart';
 
 class profileStorage {
   final firebase_storage.FirebaseStorage storage =
@@ -29,10 +31,26 @@ class profileStorage {
         'profileimg': profilePictureUrl,
       }
       );
-
+      
       print('Profile picture URL saved successfully');
     } catch (e) {
       print('Error saving profile picture URL: $e');
+    }
+  }
+  Future<String?> fetchProfileImageUrl() async {
+    try {
+      DatabaseReference userRef = FirebaseDatabase.instance
+          .ref()
+          .child('users')
+          .child(UserIdController().userid.value);
+
+      DatabaseEvent event = await userRef.child('profileimg').once();
+      String? profileImageUrl = event.snapshot.value.toString();
+
+      return profileImageUrl;
+    } catch (e) {
+      print('Error fetching profile image URL: $e');
+      return null;
     }
   }
 }

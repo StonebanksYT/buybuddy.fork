@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
@@ -32,6 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   /// Variables
   Uint8List? imageFile = Uint8List(2);
+  late String? profileimg;
   VisibilityController visibilityController = Get.put(VisibilityController());
   Controller controller = Get.put(Controller());
 
@@ -42,30 +44,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     const YourProducts()
   ];
   Future<void> chooseProfilePicture() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
-    imageFile = result!.files.first.bytes;
-    String profilePictureUrl =
-        await profileStorage().uploadFile(imageFile, result.files.first.name);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png', 'jpeg'],
+        allowMultiple: false,
+      );
+      imageFile = result!.files.first.bytes;
+      String profilePictureUrl =
+          await profileStorage().uploadFile(imageFile, result.files.first.name);
 
-    // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
-    // String profilePictureUrl = await uploadProfilePicture(imageFile);
+      // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
+      // String profilePictureUrl = await uploadProfilePicture(imageFile);
 
-    profileStorage().saveProfilePictureUrl(profilePictureUrl);
-    print(profilePictureUrl);
+      profileStorage().saveProfilePictureUrl(profilePictureUrl);
 
-    // Refresh the profile screen to reflect the updated profile picture
-    setState(() {});
+      // Refresh the profile screen to reflect the updated profile picture
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
   }
-  
 
   /// since the data is getting fetched from firebase realtime database, a future method is used to wait for the data
   Future<Widget> profileScreen() async {
     try {
       Controller controller = Get.put(Controller());
       UserIdController userIdController = Get.put(UserIdController());
+      profileimg = await profileStorage().fetchProfileImageUrl();
+      print(profileimg);
 
       /// fetching user data corresponding to the user currently logged in
       DatabaseReference userRef = FirebaseDatabase.instance
@@ -79,6 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Object? data = event.snapshot.value;
           Map<String, dynamic> dataMap = data as Map<String, dynamic>;
           // storing profile information from firebase into controller
+          controller.setProfileimg(profileimg!);
           controller.setUserModel(UserModel(
               firstName:
                   "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
@@ -90,7 +98,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               instituteName:
                   "${dataMap["instituteName"][0].toUpperCase() + dataMap["instituteName"].substring(1)}",
               instituteLocation:
-                  "${dataMap["instituteLocation"][0].toUpperCase() + dataMap["instituteLocation"].substring(1)}"));
+                  "${dataMap["instituteLocation"][0].toUpperCase() + dataMap["instituteLocation"].substring(1)}",
+              profileimg: profileimg));
         });
       });
     } catch (e) {
@@ -244,10 +253,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          controller.userModel.value
-                                                      .profileimg ==
-                                                  null
+                                          profileimg != null
                                               ? InkWell(
+                                                  onTap: () {
+                                                    chooseProfilePicture();
+                                                  },
+                                                  child: CircleAvatar(
+                                                      radius: 50,
+                                                      backgroundImage:
+                                                          CachedNetworkImageProvider(
+                                                        controller.userModel
+                                                            .value.profileimg!,
+                                                      )),
+                                                )
+                                              : InkWell(
                                                   onTap: () {
                                                     chooseProfilePicture();
                                                   },
@@ -261,18 +280,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       size: 50,
                                                     ),
                                                   ),
-                                                )
-                                              : InkWell(
-                                                  onTap: () {
-                                                    chooseProfilePicture();
-                                                  },
-                                                  child: CircleAvatar(
-                                                      radius: 50,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                        controller.userModel
-                                                            .value.profileimg as String,
-                                                      )),
                                                 ),
                                           const SizedBox(
                                             height: 10,
