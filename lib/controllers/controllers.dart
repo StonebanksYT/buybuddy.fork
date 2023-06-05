@@ -3,7 +3,7 @@ import 'package:flutter_auth/models/userModel.dart';
 import 'package:get/get.dart';
 
 class Controller extends GetxController{
-  Rx<UserModel> userModel=UserModel(firstName: "", lastName: "",mobileNumber: "", email: "", instituteType: "", instituteName: "", instituteLocation: "").obs;
+  Rx<UserModel> userModel=UserModel(firstName: "", lastName: "",mobileNumber: "", email: "", instituteType: "", instituteName: "", instituteLocation: "",profileimg: "").obs;
   setUserModel(UserModel model){
     userModel.value=model;
   }

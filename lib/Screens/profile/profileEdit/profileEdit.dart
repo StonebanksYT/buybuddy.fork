@@ -18,6 +18,7 @@ class EditProfileDialog extends StatefulWidget {
   final String instituteName;
   final String language;
   final String instituteLocation;
+  final String? profileimg;
 
   const EditProfileDialog({
     Key? key,
@@ -28,6 +29,7 @@ class EditProfileDialog extends StatefulWidget {
     required this.instituteName,
     required this.language,
     required this.instituteLocation,
+    this.profileimg,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   late TextEditingController _instituteTypeController;
   late TextEditingController _languageController;
   late TextEditingController _instituteLocationController;
+  late TextEditingController _profileImageController;
   Controller controller = Get.put(Controller());
   UserIdController userIdController = Get.find<UserIdController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
