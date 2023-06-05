@@ -29,7 +29,9 @@ class HomePageAppBar extends StatelessWidget {
               margin: const EdgeInsets.only(right: 10),
               child: Row(
                 children: [
-                  customButton(Icons.home, "HOME"),
+                  customButton(Icons.home, "HOME", onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  }),
                   // const SizedBox(
                   //   width: 10,
                   // ),
@@ -71,10 +73,12 @@ class HomePageAppBar extends StatelessWidget {
         ));
   }
 
-  Widget customButton(IconData icon, String text) {
+  Widget customButton(IconData icon, String text, {Function? onPressed}) {
     return TextButton(
         style: TextButton.styleFrom(elevation: 0),
-        onPressed: () {},
+        onPressed: () {
+          onPressed;
+        },
         child: Row(
           children: [
             Icon(

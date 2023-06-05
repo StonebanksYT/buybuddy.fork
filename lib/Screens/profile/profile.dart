@@ -1,6 +1,7 @@
-/// Profile page which includes information of user
-import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
+import 'dart:typed_data';
+
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
+import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:get/get.dart';
 import 'profileutils/profileComponents.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
+import 'package:file_picker/file_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -29,14 +31,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /// Variables
+  Uint8List? imageFile = Uint8List(2);
   VisibilityController visibilityController = Get.put(VisibilityController());
   Controller controller = Get.put(Controller());
+
   UserIdController userIdController = Get.put(UserIdController());
   List<Widget> pages = [
     PersonalInfo(),
     const YourOrders(),
     const YourProducts()
   ];
+  Future<void> chooseProfilePicture() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+    imageFile = result!.files.first.bytes;
+    String profilePictureUrl =
+        await profileStorage().uploadFile(imageFile, result.files.first.name);
+
+    // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
+    // String profilePictureUrl = await uploadProfilePicture(imageFile);
+
+    profileStorage().saveProfilePictureUrl(profilePictureUrl);
+    print(profilePictureUrl);
+
+    // Refresh the profile screen to reflect the updated profile picture
+    setState(() {});
+  }
+  
 
   /// since the data is getting fetched from firebase realtime database, a future method is used to wait for the data
   Future<Widget> profileScreen() async {
@@ -94,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             } else {
               return Scaffold(
                 backgroundColor: const Color.fromRGBO(245, 247, 248, 1),
-                endDrawer: SideBarMenu(),
+                endDrawer: const SideBarMenu(),
                 body: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -221,15 +244,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const CircleAvatar(
-                                              backgroundColor: Color.fromRGBO(
-                                                  231, 233, 237, 1),
-                                              radius: 50,
-                                              child: Icon(
-                                                Icons.person,
-                                                size: 50,
-                                                color: Colors.white,
-                                              )),
+                                          controller.userModel.value
+                                                      .profileimg ==
+                                                  null
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    chooseProfilePicture();
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 50,
+                                                    backgroundColor:
+                                                        Colors.grey.shade400,
+                                                    child: const Icon(
+                                                      Icons.person,
+                                                      color: Colors.white,
+                                                      size: 50,
+                                                    ),
+                                                  ),
+                                                )
+                                              : InkWell(
+                                                  onTap: () {
+                                                    chooseProfilePicture();
+                                                  },
+                                                  child: CircleAvatar(
+                                                      radius: 50,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                        controller.userModel
+                                                            .value.profileimg as String,
+                                                      )),
+                                                ),
                                           const SizedBox(
                                             height: 10,
                                           ),
