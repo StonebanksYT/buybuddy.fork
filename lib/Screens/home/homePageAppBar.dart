@@ -43,7 +43,7 @@ class HomePageAppBar extends StatelessWidget {
                           },
                         ));
                       },
-                      child: const Text("test"),
+                      child: const Text("t"),
                     ),
                   ),
                   customButton(Icons.shopping_cart, "CART"),

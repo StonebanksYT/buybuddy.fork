@@ -57,7 +57,7 @@ class SignUpPageBody extends StatelessWidget {
                     child: SizedBox(
                       width: 410,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             height: 140,
@@ -186,7 +186,6 @@ class SignUpPageBody extends StatelessWidget {
                                       keyboardType: TextInputType.emailAddress,
                                       textInputAction: TextInputAction.next,
                                     ),
-                                    passwordFormat(),
                                     CustomTextField(
                                       controller: passwordController,
                                       width: 410,
@@ -197,6 +196,11 @@ class SignUpPageBody extends StatelessWidget {
                                           TextInputType.visiblePassword,
                                       textInputAction: TextInputAction.done,
                                       hintText: "6+ characters",
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: passwordFormat(),
                                     ),
                                     CustomTextField(
                                       width: 410,

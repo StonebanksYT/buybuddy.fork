@@ -37,6 +37,7 @@ dependencies:
   expandable: ^5.0.1
   firebase_storage: ^11.2.2
   country_pickers:
+  image_picker: ^0.8.7+5
 dev_dependencies:
   flutter_test:
     sdk: flutter

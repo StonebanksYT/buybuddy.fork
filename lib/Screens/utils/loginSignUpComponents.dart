@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GoogleConnect extends StatelessWidget {
- final  bool isLogin;
- final  Function() onTap;
-  GoogleConnect({Key? key, required this.isLogin, required this.onTap})
+  final bool isLogin;
+  final Function() onTap;
+  const GoogleConnect({Key? key, required this.isLogin, required this.onTap})
       : super(key: key);
 
   @override
@@ -53,7 +53,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackBar(
     backgroundColor: Colors.teal,
     behavior: SnackBarBehavior.floating,
     width: 300,
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
     action: SnackBarAction(
       label: 'Dismiss',
       disabledTextColor: Colors.white,
@@ -73,24 +73,26 @@ class Validations {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-    RegExp regExp = new RegExp(p);
+    RegExp regExp = RegExp(p);
 
     return regExp.hasMatch(em);
   }
 
   static bool validateMobile(String value) {
 // Indian Mobile number are of 10 digit only
-    if (value.length != 10)
+    if (value.length != 10) {
       return false;
-    else
+    } else {
       return true;
+    }
   }
 
   static bool validateName(String value) {
-    if (value.length < 3)
+    if (value.length < 3) {
       return false;
-    else
+    } else {
       return true;
+    }
   }
 
   static bool validatePassword(String value) {
@@ -105,7 +107,7 @@ class Validations {
 
 Widget passwordFormat() {
   return Text(
-    "* Password must include atleast 1 special character, capital letter, number",
+    "* Password must include atleast 1 special character, 1 capital letter and 1 number",
     style: GoogleFonts.getFont("Nunito",
         fontSize: 13, fontWeight: FontWeight.normal),
   );

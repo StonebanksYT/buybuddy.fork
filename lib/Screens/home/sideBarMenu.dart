@@ -3,7 +3,7 @@ import 'package:flutter_auth/Screens/Login/login_screen.dart';
 import 'package:flutter_auth/Screens/profile/profile.dart';
 
 class SideBarMenu extends StatefulWidget {
-  SideBarMenu({Key? key}) : super(key: key);
+  const SideBarMenu({Key? key}) : super(key: key);
 
   @override
   State<SideBarMenu> createState() => _SideBarMenuState();
@@ -21,18 +21,14 @@ class _SideBarMenuState extends State<SideBarMenu> {
           title: const Center(child: Text('SignIn/SignUp')),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(
-              context,'/login'
-            );
+            Navigator.pushNamed(context, '/login');
           },
         ),
         ListTile(
           contentPadding: const EdgeInsets.symmetric(vertical: 20),
           title: const Center(child: Text('Profile')),
           onTap: () {
-            Navigator.pop(context);
-
-            Navigator.pushNamed(context, '/profile');
+            Navigator.popAndPushNamed(context, '/profile');
           },
         ),
         ListTile(

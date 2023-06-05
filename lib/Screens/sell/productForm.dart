@@ -51,7 +51,7 @@ class _ProductFormState extends State<ProductForm> {
             child: ElevatedButton(
               /// picking the file and uploading the file on firebase storage
               onPressed: filePicker,
-              child: const Text("photoes"),
+              child: const Text("photos"),
             ),
           ),
           SizedBox(
@@ -84,7 +84,7 @@ class _ProductFormState extends State<ProductForm> {
                   print(e);
                 }
               },
-              child: const Text("Creat Ad"),
+              child: const Text("Create Ad"),
             ),
           )
         ],
