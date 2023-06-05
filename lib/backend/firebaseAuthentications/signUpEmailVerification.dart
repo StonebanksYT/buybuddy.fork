@@ -17,19 +17,18 @@ class EmailVerificationScreen extends StatefulWidget {
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   bool isEmailVerified = false;
   late Timer? timer;
-  bool canResendEmail=false;
+  bool canResendEmail = false;
   Future sendVerificationEmail() async {
     try {
       final user = FirebaseAuth.instance.currentUser!;
       await user.sendEmailVerification();
-      setState((){
-       canResendEmail=false;
-
+      setState(() {
+        canResendEmail = false;
       });
-       await Future.delayed(Duration(seconds: 5));
-       setState(() {
-         canResendEmail=true;
-       });
+      await Future.delayed(const Duration(seconds: 5));
+      setState(() {
+        canResendEmail = true;
+      });
     } catch (e) {
       customSnackBar(context, e.toString());
     }
@@ -64,27 +63,35 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? HomePage()
+        ? const HomePage()
         : Scaffold(
             appBar: AppBar(title: const Text("Email Verification")),
             body: Center(
-              child: Column(children: [
-                const Text("A verification email has been sent"),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                const Text(
+                  "A verification email has been sent",
+                  style: TextStyle(fontSize: 50),
+                ),
                 SizedBox(
                   height: 30,
                   width: 100,
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.email),
                     label: const Text("Resend Email"),
-                    onPressed: canResendEmail?sendVerificationEmail:(){},
+                    onPressed: canResendEmail ? sendVerificationEmail : () {},
                   ),
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 30,
                   width: 100,
-                  child: TextButton(child: Text("Cancel"),onPressed: ()async{
-                    return await FirebaseAuth.instance.signOut();
-                  },),
+                  child: TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () async {
+                      return await FirebaseAuth.instance.signOut();
+                    },
+                  ),
                 )
               ]),
             ),

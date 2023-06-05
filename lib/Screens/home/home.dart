@@ -8,10 +8,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: SideBarMenu(),
-      backgroundColor: const Color(0xffffffff),
-      body: Column(children: [HomePageAppBar(), const DashBoard()]),
+    return const Scaffold(
+      // endDrawer: SideBarMenu(),
+      backgroundColor: Color(0xffffffff),
+      body: 
+      // Column(
+        // children: [HomePageAppBar(), 
+      DashBoard()
+      // ]),
     );
   }
 }

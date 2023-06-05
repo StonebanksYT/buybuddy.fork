@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/appbar/dashboardAppBar.dart';
 import 'package:flutter_auth/Screens/home/dashboard/filterSide/filter.dart';
 import 'package:flutter_auth/Screens/home/dashboard/productSection/productCard.dart';
 import 'package:flutter_auth/Screens/home/dashboard/productSection/productConstants.dart';
+import 'package:flutter_auth/Screens/home/homePageAppBar.dart';
+import 'package:flutter_auth/Screens/home/sideBarMenu.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DashBoard extends StatelessWidget {
@@ -13,10 +14,11 @@ class DashBoard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     print("dashboard build");
     return Scaffold(
+      endDrawer: SideBarMenu(),
       body: Column(
         children: [
           /// Dashboard appbar
-          const DashboardAppBar(),
+          const HomePageAppBar(),
 
           /// Main Dashboard which have filters, products, ads sections
           Expanded(

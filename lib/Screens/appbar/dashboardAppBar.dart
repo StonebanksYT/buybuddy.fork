@@ -54,6 +54,9 @@ class DashboardAppBar extends StatelessWidget {
             child: CustomTabButton(
               icon: Icons.home,
               tabName: "Home",
+              onPressed: () {
+                Navigator.pushNamed(context, "/home");
+              },
             )),
         const SizedBox(
           width: 20,

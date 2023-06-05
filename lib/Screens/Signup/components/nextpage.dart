@@ -86,7 +86,7 @@ class NextPageOfSignUpPage extends StatefulWidget {
   final String mobileNumber;
   final String emailAddress;
   final String password;
-  NextPageOfSignUpPage(
+  const NextPageOfSignUpPage(
       {Key? key,
       required this.firstName,
       required this.lastName,
@@ -118,8 +118,8 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
         const SizedBox(height: 20),
         FieldStyle(
           fieldName: "School Address",
-          onChanged: (p0) {
-            controller.setInstituteLocation(p0);
+          onChanged: (p1) {
+            controller.setInstituteLocation(p1);
           },
           controller: instituteLocationController,
           initialText: controller.instituteLocation.value,
@@ -146,13 +146,15 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
             onChanged: (p0) {
               controller.setInstituteLocation(p0);
             },
-            controller: instituteLocationController,initialText: controller.instituteLocation.value),
+            controller: instituteLocationController,
+            initialText: controller.instituteLocation.value),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    controller.setsignUpLoading(false);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -165,10 +167,10 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
                 color: Colors.amber,
                 width: size.width * 0.4,
               ),
-              Container(
+              SizedBox(
                 width: size.width * 0.6,
                 child: Center(
-                  child: Container(
+                  child: SizedBox(
                     width: 450,
                     child: SingleChildScrollView(
                       child: Column(
@@ -280,8 +282,9 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
                                   onPressed: () async {
                                     var instituteName =
                                         controller.instituteName.value.trim();
-                                    var instituteLocation =
-                                        controller.instituteLocation.value.trim();
+                                    var instituteLocation = controller
+                                        .instituteLocation.value
+                                        .trim();
                                     if (controller
                                             .instituteType.value.isEmpty ||
                                         instituteName.isEmpty ||
@@ -318,7 +321,7 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
                                       backgroundColor: Colors.white,
                                       shadowColor: Colors.white),
                                   child: controller.signUpLoading.value
-                                      ? CircularProgressIndicator()
+                                      ? const CircularProgressIndicator()
                                       : const Text(
                                           "Create Account",
                                           style: TextStyle(

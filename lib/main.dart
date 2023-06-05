@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_auth/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_auth/firebase_options.dart';
+import 'package:flutter_auth/routegenerator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +45,8 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-      home: const WelcomeScreen(),
+      initialRoute: '/dashboard',
+      onGenerateRoute: RouteGenerator.generateRoute,
       // home: WelcomeScreen(),
     );
   }

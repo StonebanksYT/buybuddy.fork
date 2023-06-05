@@ -36,6 +36,7 @@ dependencies:
   file_picker: ^5.3.1
   expandable: ^5.0.1
   firebase_storage: ^11.2.2
+  country_pickers:
 dev_dependencies:
   flutter_test:
     sdk: flutter

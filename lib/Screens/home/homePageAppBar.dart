@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'textFieldContainer.dart';
 import 'package:flutter_auth/Screens/sell/productForm.dart';
 
-class HomePageAppBar extends StatelessWidget{
-  HomePageAppBar({Key? key}) : super(key: key);
+class HomePageAppBar extends StatelessWidget {
+  const HomePageAppBar({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,9 +15,14 @@ class HomePageAppBar extends StatelessWidget{
           children: [
             Container(
               margin: const EdgeInsets.only(left: 10),
-              child: const Text(
-                "BuyBuddy",
-                style: TextStyle(color: Colors.black, fontSize: 25),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/home');
+                },
+                child: const Text(
+                  "BuyBuddy",
+                  style: TextStyle(color: Colors.black, fontSize: 25),
+                ),
               ),
             ),
             Container(
@@ -28,17 +33,24 @@ class HomePageAppBar extends StatelessWidget{
                   // const SizedBox(
                   //   width: 10,
                   // ),
-                   SizedBox(width: 30,child: ElevatedButton(onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return ProductForm();
-                    },));
-                  },child: Text("d"),),),
+                  SizedBox(
+                    width: 30,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return ProductForm();
+                          },
+                        ));
+                      },
+                      child: const Text("test"),
+                    ),
+                  ),
                   customButton(Icons.shopping_cart, "CART"),
                   // const SizedBox(
                   //   width: 10,
                   // ),
                   const SearchBar(),
-                 
 
                   // const SizedBox(
                   //   width: 10,

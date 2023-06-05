@@ -27,9 +27,7 @@ class FirebaseLogin {
       userIdController.setUserId(credential.user!.uid);
       print(credential.user!.uid);
       // NrT25T1JVoa6FEFZjjyswV7zI5A3
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return HomePage();
-      }));
+      Navigator.pushNamed(context, '/home');
       controller.setloginLoading(false);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

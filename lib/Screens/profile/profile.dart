@@ -19,7 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -37,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     const YourOrders(),
     const YourProducts()
   ];
+
   /// since the data is getting fetched from firebase realtime database, a future method is used to wait for the data
   Future<Widget> profileScreen() async {
     try {
@@ -70,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       });
     } catch (e) {
-      Text("${e}");
+      Text("$e");
     }
     return Container();
   }
@@ -97,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 body: SingleChildScrollView(
                   child: Column(
                     children: [
-                      HomePageAppBar(),
+                      const HomePageAppBar(),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(230, 20, 230, 0),
                         child: Column(
@@ -128,43 +129,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           child: ElevatedButton(
                                             onPressed: () {
                                               showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return EditProfileDialog(
-                                                      instituteLocation:
-                                                          controller
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return EditProfileDialog(
+                                                          instituteLocation:
+                                                              controller
+                                                                  .userModel
+                                                                  .value
+                                                                  .instituteLocation,
+                                                          instituteName:
+                                                              controller
+                                                                  .userModel
+                                                                  .value
+                                                                  .instituteName,
+                                                          language:
+                                                              "English, Hindi",
+                                                          mobileNumber:
+                                                              controller
+                                                                  .userModel
+                                                                  .value
+                                                                  .mobileNumber,
+                                                          email: controller
                                                               .userModel
                                                               .value
-                                                              .instituteLocation,
-                                                      instituteName: controller
-                                                          .userModel
-                                                          .value
-                                                          .instituteName,
-                                                      language:
-                                                          "English, Hindi",
-                                                      mobileNumber: controller
-                                                          .userModel
-                                                          .value
-                                                          .mobileNumber,
-                                                      firstName: controller
-                                                          .userModel
-                                                          .value
-                                                          .firstName,
-                                                      lastName: controller
-                                                          .userModel
-                                                          .value
-                                                          .lastName,
-                                                    );
-                                                  }).then((value) => setState(
-                                                      () {
-                                                    if (value == null) {
-                                                      /// Takes care of the situation when no theme is selected.
-                                                      return;
-                                                    } else {
-                                                      print("value ${value}");
-                                                    }
-                                                  }));
+                                                              .email,
+                                                          firstName: controller
+                                                              .userModel
+                                                              .value
+                                                              .firstName,
+                                                          lastName: controller
+                                                              .userModel
+                                                              .value
+                                                              .lastName,
+                                                        );
+                                                      })
+                                                  .then((value) => setState(() {
+                                                        if (value == null) {
+                                                          /// Takes care of the situation when no theme is selected.
+                                                          return;
+                                                        } else {
+                                                          print("value $value");
+                                                        }
+                                                      }));
                                             },
                                             style: CustomElevatedBtnStyle(),
                                             child: Row(
@@ -187,11 +194,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 100,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: ((context) {
-                                                return const SignUpScreen();
-                                              })));
+                                              Navigator.pushNamed(
+                                                  context, '/signup');
                                             },
                                             style: CustomElevatedBtnStyle(),
                                             child: Text("Sign Out",

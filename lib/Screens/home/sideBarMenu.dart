@@ -21,9 +21,9 @@ class _SideBarMenuState extends State<SideBarMenu> {
           title: const Center(child: Text('SignIn/SignUp')),
           onTap: () {
             Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: ((context) {
-              return LoginScreen();
-            })));
+            Navigator.pushNamed(
+              context,'/login'
+            );
           },
         ),
         ListTile(
@@ -32,10 +32,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
           onTap: () {
             Navigator.pop(context);
 
-            Navigator.push(context, MaterialPageRoute(builder: ((context) {
-          
-              return  ProfileScreen();
-            })));
+            Navigator.pushNamed(context, '/profile');
           },
         ),
         ListTile(

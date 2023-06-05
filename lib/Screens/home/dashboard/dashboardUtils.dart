@@ -71,11 +71,12 @@ class SearchField extends StatelessWidget {
 class CustomTabButton extends StatelessWidget {
   final String tabName;
   final IconData icon;
-  CustomTabButton({required this.tabName, required this.icon});
+  final Function()? onPressed;
+  CustomTabButton({required this.tabName, required this.icon, this.onPressed});
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: () {},
+        onPressed: () {onPressed!();},
         style: ButtonStyle(
             overlayColor: MaterialStateProperty.all(Colors.transparent),
             padding: MaterialStateProperty.all(EdgeInsets.zero),
