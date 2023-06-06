@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
@@ -72,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Controller controller = Get.put(Controller());
       UserIdController userIdController = Get.put(UserIdController());
       profileimg = await profileStorage().fetchProfileImageUrl();
-      print(profileimg);
+      // print(profileimg);
 
       /// fetching user data corresponding to the user currently logged in
       DatabaseReference userRef = FirebaseDatabase.instance
@@ -106,6 +105,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Text("$e");
     }
     return Container();
+  }
+
+  Widget imagewidget() {
+    if (controller.userModel.value.profileimg != null) {
+      return Obx(() {
+        return InkWell(
+            onTap: () {
+              chooseProfilePicture();
+            },
+            child: Image.network(controller.userModel.value.profileimg!));
+      });
+    } else {
+      return InkWell(
+        onTap: () {
+          chooseProfilePicture();
+        },
+        child: CircleAvatar(
+          radius: 50,
+          backgroundColor: Colors.grey.shade400,
+          child: const Icon(
+            Icons.person,
+            color: Colors.white,
+            size: 50,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -253,34 +279,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          profileimg != null
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    chooseProfilePicture();
-                                                  },
-                                                  child: CircleAvatar(
-                                                      radius: 50,
-                                                      backgroundImage:
-                                                          CachedNetworkImageProvider(
-                                                        controller.userModel
-                                                            .value.profileimg!,
-                                                      )),
-                                                )
-                                              : InkWell(
-                                                  onTap: () {
-                                                    chooseProfilePicture();
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 50,
-                                                    backgroundColor:
-                                                        Colors.grey.shade400,
-                                                    child: const Icon(
-                                                      Icons.person,
-                                                      color: Colors.white,
-                                                      size: 50,
-                                                    ),
-                                                  ),
-                                                ),
+                                          imagewidget(),
                                           const SizedBox(
                                             height: 10,
                                           ),

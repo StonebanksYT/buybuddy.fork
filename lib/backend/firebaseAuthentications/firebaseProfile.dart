@@ -1,17 +1,21 @@
 import 'dart:typed_data';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
-import 'package:flutter_auth/models/userModel.dart';
 
 class profileStorage {
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
+
   Future<String> uploadFile(Uint8List? bytes, String fileName) async {
+    String userid = UserIdController().userid.value;
     try {
+      final path = 'profile/$userid/$fileName';
+      final metadata = firebase_storage.SettableMetadata(
+          contentType: 'image/png',
+          customMetadata: {'picked-file-path': 'profile/$userid/$fileName'});
       firebase_storage.TaskSnapshot snapshot1 =
-          await storage.ref("profile/$fileName").putData(bytes!);
+          await storage.ref(path).putData(bytes!, metadata);
       String downloadUrl = await snapshot1.ref.getDownloadURL();
       return downloadUrl;
     } on firebase_storage.FirebaseException catch (e) {
@@ -26,17 +30,17 @@ class profileStorage {
           .ref()
           .child('users')
           .child(UserIdController().userid.value);
-      
+
       await userRef.update({
         'profileimg': profilePictureUrl,
-      }
-      );
-      
+      });
+
       print('Profile picture URL saved successfully');
     } catch (e) {
       print('Error saving profile picture URL: $e');
     }
   }
+
   Future<String?> fetchProfileImageUrl() async {
     try {
       DatabaseReference userRef = FirebaseDatabase.instance

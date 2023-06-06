@@ -128,7 +128,7 @@ class CustomCard extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: SizedBox(
-          height: 120,
+          height: 125,
 
           /// added inkwell just for future animation purpose
           child: InkWell(
