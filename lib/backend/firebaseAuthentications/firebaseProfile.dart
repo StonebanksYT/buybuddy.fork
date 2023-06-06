@@ -4,11 +4,13 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_auth/controllers/userIdController.dart';
 
 class profileStorage {
+  String userid = UserIdController().userid.value;
+  
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
 
   Future<String> uploadFile(Uint8List? bytes, String fileName) async {
-    String userid = UserIdController().userid.value;
+    
     try {
       final path = 'profile/$userid/$fileName';
       final metadata = firebase_storage.SettableMetadata(
@@ -40,6 +42,38 @@ class profileStorage {
       print('Error saving profile picture URL: $e');
     }
   }
+  void removeProfilePicture() async {
+  final profileimg = await profileStorage().fetchProfileImageUrl();
+  try {
+    // Remove profile picture from storage
+    if (profileimg != null && profileimg.isNotEmpty) {
+      // Extract the filename from the URL
+      String fileName = profileimg.split('/').last;
+      final path = 'profile/$userid/$fileName';
+      // Get a reference to the storage file
+      firebase_storage.Reference storageReference = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child(path);
+
+      // Delete the file
+      await storageReference.delete();
+    }
+
+    // Update profile picture URL in the database
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .ref()
+        .child('users')
+        .child(UserIdController().userid.value);
+
+    await userRef.update({
+      'profileimg': '',
+    });
+
+    print('Profile picture removed successfully');
+  } catch (e) {
+    print('Error removing profile picture: $e');
+  }
+}
 
   Future<String?> fetchProfileImageUrl() async {
     try {

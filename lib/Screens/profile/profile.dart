@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'dart:html' as html;
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
@@ -35,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String? profileimg;
   VisibilityController visibilityController = Get.put(VisibilityController());
   Controller controller = Get.put(Controller());
+  final GlobalKey imageKey = GlobalKey();
 
   UserIdController userIdController = Get.put(UserIdController());
   List<Widget> pages = [
@@ -71,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Controller controller = Get.put(Controller());
       UserIdController userIdController = Get.put(UserIdController());
       profileimg = await profileStorage().fetchProfileImageUrl();
-      // print(profileimg);
+      print(profileimg);
 
       /// fetching user data corresponding to the user currently logged in
       DatabaseReference userRef = FirebaseDatabase.instance
@@ -110,11 +111,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget imagewidget() {
     if (controller.userModel.value.profileimg != null) {
       return Obx(() {
-        return InkWell(
-            onTap: () {
-              chooseProfilePicture();
-            },
-            child: Image.network(controller.userModel.value.profileimg!));
+        return MouseRegion(
+          onEnter: (_) {
+            html.document.onContextMenu.listen((event) {
+              event.preventDefault();
+            });
+          },
+          child: InkWell(
+              onTap: () {
+                chooseProfilePicture();
+              },
+              onSecondaryTap: () {
+                showPopupMenu();
+              },
+              child: CircleAvatar(
+                key: imageKey,
+                radius: 100,
+                backgroundImage:
+                    NetworkImage(controller.userModel.value.profileimg!),
+              )),
+        );
       });
     } else {
       return InkWell(
@@ -131,6 +147,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       );
+    }
+  }
+
+  void showPopupMenu() async {
+    final RenderBox imageRenderBox =
+        imageKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final menuPosition = RelativeRect.fromRect(
+      Rect.fromPoints(
+        imageRenderBox.localToGlobal(Offset.zero, ancestor: overlay),
+        imageRenderBox.localToGlobal(
+            imageRenderBox.size.bottomRight(Offset.zero),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+    final value = await showMenu(
+      context: context,
+      position: menuPosition,
+      items: [
+        const PopupMenuItem(
+          value: 'change',
+          child: Text('Change Image'),
+        ),
+        const PopupMenuItem(
+          value: 'remove',
+          child: Text('Remove Image'),
+        ),
+      ],
+    );
+
+    if (value == 'change') {
+      // Handle change image action
+      chooseProfilePicture();
+    } else if (value == 'remove') {
+      // Handle remove image action
+      profileStorage().removeProfilePicture();
     }
   }
 
@@ -174,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           "Nunito",
                                           textStyle: const TextStyle(
                                               color: Colors.black,
-                                              fontSize: 20,
+                                              fontSize: 25,
                                               fontWeight: FontWeight.bold),
                                         )),
                                     Row(
@@ -277,7 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       flex: 1,
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           imagewidget(),
                                           const SizedBox(
@@ -294,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                           ),
                                           const SizedBox(
-                                            height: 10,
+                                            height: 5,
                                           ),
                                           Obx(() {
                                             return CustomText(
