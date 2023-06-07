@@ -109,7 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget imagewidget() {
-    if (controller.userModel.value.profileimg != null) {
+    if (controller.userModel.value.profileimg != null &&
+        controller.userModel.value.profileimg != "") {
       return Obx(() {
         return MouseRegion(
           onEnter: (_) {
@@ -138,12 +139,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           chooseProfilePicture();
         },
         child: CircleAvatar(
-          radius: 50,
+          radius: 100,
           backgroundColor: Colors.grey.shade400,
-          child: const Icon(
-            Icons.person,
-            color: Colors.white,
-            size: 50,
+          child: const Center(
+            child: Icon(
+              Icons.person,
+              color: Colors.white,
+              size: 100,
+            ),
           ),
         ),
       );
@@ -185,6 +188,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else if (value == 'remove') {
       // Handle remove image action
       profileStorage().removeProfilePicture();
+      controller.setProfileimg("");
+      print(profileimg);
     }
   }
 
