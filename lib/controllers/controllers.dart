@@ -47,6 +47,9 @@ class Controller extends GetxController {
   setProfileimg(String? value) {
     profileimg!.value = value!;
   }
+  // removeProfileimg(IconD value){
+  //   profileimg.value = "";
+  // }
 
   RxList categoryFilterList = [].obs;
   addCategoryFilterList(String value) {

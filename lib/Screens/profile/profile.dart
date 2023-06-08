@@ -45,6 +45,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ];
   Future<void> chooseProfilePicture() async {
     try {
+       // Check if there is already a profile picture
+    String? currentProfilePictureUrl = await profileStorage().fetchProfileImageUrl();
+    if (currentProfilePictureUrl != null && currentProfilePictureUrl.isNotEmpty) {
+      // Delete the current profile picture from Firebase Storage
+      await profileStorage().removeProfilePicture(currentProfilePictureUrl);
+    }
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'png', 'jpeg'],
@@ -86,7 +92,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Object? data = event.snapshot.value;
           Map<String, dynamic> dataMap = data as Map<String, dynamic>;
           // storing profile information from firebase into controller
-          controller.setProfileimg(profileimg);
+          if (profileimg != null && profileimg != "") {
+            controller.setProfileimg(profileimg);
+          }
+
           controller.setUserModel(UserModel(
               firstName:
                   "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
@@ -99,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   "${dataMap["instituteName"][0].toUpperCase() + dataMap["instituteName"].substring(1)}",
               instituteLocation:
                   "${dataMap["instituteLocation"][0].toUpperCase() + dataMap["instituteLocation"].substring(1)}",
-              profileimg: profileimg));
+              profileimg: dataMap["profileimg"]));
         });
       });
     } catch (e) {
@@ -109,48 +118,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget imagewidget() {
-    if (controller.userModel.value.profileimg != null ||
-        controller.userModel.value.profileimg != "") {
-      return Obx(() {
-        return MouseRegion(
-          onEnter: (_) {
-            html.document.onContextMenu.listen((event) {
-              event.preventDefault();
-            });
-          },
-          child: InkWell(
-              onTap: () {
-                chooseProfilePicture();
-              },
-              onSecondaryTap: () {
-                showPopupMenu();
-              },
-              child: CircleAvatar(
-                key: imageKey,
-                radius: 100,
-                backgroundImage:
-                    NetworkImage(controller.userModel.value.profileimg!),
-              )),
-        );
-      });
-    } else {
-      return InkWell(
+    return MouseRegion(
+      onEnter: (_) {
+        html.document.onContextMenu.listen((event) {
+          event.preventDefault();
+        });
+      },
+      child: InkWell(
         onTap: () {
           chooseProfilePicture();
         },
+        onSecondaryTap: () {
+          showPopupMenu();
+        },
         child: CircleAvatar(
+          key: imageKey,
           radius: 100,
+          backgroundImage: NetworkImage(controller.userModel.value.profileimg!),
           backgroundColor: Colors.grey.shade400,
-          child: const Center(
-            child: Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 100,
-            ),
-          ),
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  Widget PersonIconWidget() {
+    return InkWell(
+      onTap: () {
+        chooseProfilePicture();
+      },
+      child: CircleAvatar(
+        radius: 100,
+        backgroundColor: Colors.grey.shade400,
+        child: const Icon(
+          Icons.person,
+          color: Colors.white,
+          size: 100,
+        ),
+      ),
+    );
   }
 
   void showPopupMenu() async {
@@ -187,7 +192,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       chooseProfilePicture();
     } else if (value == 'remove') {
       // Handle remove image action
-      profileStorage().removeProfilePicture();
+      final profileimg = await profileStorage().fetchProfileImageUrl();
+      await profileStorage().removeProfilePicture(profileimg);
       controller.setProfileimg("");
       print(profileimg);
     }
@@ -338,7 +344,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
                                         children: [
-                                          imagewidget(),
+                                          Obx(() {
+                                            return controller.userModel.value
+                                                            .profileimg !=
+                                                        null &&
+                                                    controller.userModel.value
+                                                            .profileimg !=
+                                                        ""
+                                                ? imagewidget()
+                                                : PersonIconWidget();
+                                          }),
                                           const SizedBox(
                                             height: 10,
                                           ),

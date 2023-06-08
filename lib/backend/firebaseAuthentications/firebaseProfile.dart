@@ -13,7 +13,7 @@ class profileStorage {
     try {
       final path = 'profile/$userid/$fileName';
       final metadata = firebase_storage.SettableMetadata(
-          contentType: 'image/png',
+          contentType: 'image/jpg',
           customMetadata: {'picked-file-path': 'profile/$userid/$fileName'});
       firebase_storage.TaskSnapshot snapshot1 =
           await storage.ref(path).putData(bytes!, metadata);
@@ -42,11 +42,11 @@ class profileStorage {
     }
   }
 
-  void removeProfilePicture() async {
-    final profileimg = await profileStorage().fetchProfileImageUrl();
+  Future<void> removeProfilePicture(String? profileimg) async {
+    
     try {
       // Remove profile picture from storage
-      if (profileimg != null && profileimg.isNotEmpty) {        
+      if (profileimg != null && profileimg.isNotEmpty) {
         // Get a reference to the storage file
         firebase_storage.Reference storageReference =
             firebase_storage.FirebaseStorage.instance.refFromURL(profileimg);
@@ -62,7 +62,7 @@ class profileStorage {
           .child(UserIdController().userid.value);
 
       await userRef.update({
-        'profileimg': '',
+        'profileimg': "",
       });
 
       print('Profile picture removed successfully');
