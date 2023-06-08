@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Object? data = event.snapshot.value;
           Map<String, dynamic> dataMap = data as Map<String, dynamic>;
           // storing profile information from firebase into controller
-          controller.setProfileimg(profileimg!);
+          controller.setProfileimg(profileimg);
           controller.setUserModel(UserModel(
               firstName:
                   "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
@@ -109,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget imagewidget() {
-    if (controller.userModel.value.profileimg != null &&
+    if (controller.userModel.value.profileimg != null ||
         controller.userModel.value.profileimg != "") {
       return Obx(() {
         return MouseRegion(
