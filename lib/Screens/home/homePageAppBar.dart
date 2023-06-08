@@ -48,7 +48,9 @@ class HomePageAppBar extends StatelessWidget {
                       child: const Text("t"),
                     ),
                   ),
-                  customButton(Icons.shopping_cart, "CART"),
+                  customButton(Icons.shopping_cart, "CART", onPressed: () {
+                    Navigator.pushNamed(context, '/cart');
+                  }),
                   // const SizedBox(
                   //   width: 10,
                   // ),
@@ -57,7 +59,9 @@ class HomePageAppBar extends StatelessWidget {
                   // const SizedBox(
                   //   width: 10,
                   // ),
-                  customButton(Icons.category, "FILTER"),
+                  customButton(Icons.category, "FILTER", onPressed: () {
+                    print("display filter");
+                  }),
                   const SizedBox(
                     width: 10,
                   ),

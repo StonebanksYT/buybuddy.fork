@@ -14,7 +14,7 @@ class DashBoard extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     print("dashboard build");
     return Scaffold(
-      endDrawer: SideBarMenu(),
+      endDrawer: const SideBarMenu(),
       body: Column(
         children: [
           /// Dashboard appbar

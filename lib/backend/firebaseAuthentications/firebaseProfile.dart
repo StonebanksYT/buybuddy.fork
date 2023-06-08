@@ -43,7 +43,6 @@ class profileStorage {
   }
 
   Future<void> removeProfilePicture(String? profileimg) async {
-    
     try {
       // Remove profile picture from storage
       if (profileimg != null && profileimg.isNotEmpty) {

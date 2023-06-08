@@ -25,7 +25,7 @@ class DashboardAppBar extends StatelessWidget {
           width: 20,
         ),
         TextButton(
-            onPressed: () {},
+            onPressed: () {Navigator.pushNamed(context, '/home');},
             child: Text(
               "BuyBuddy",
               style: GoogleFonts.getFont("Poppins",

@@ -45,28 +45,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ];
   Future<void> chooseProfilePicture() async {
     try {
-       // Check if there is already a profile picture
-    String? currentProfilePictureUrl = await profileStorage().fetchProfileImageUrl();
-    if (currentProfilePictureUrl != null && currentProfilePictureUrl.isNotEmpty) {
-      // Delete the current profile picture from Firebase Storage
-      await profileStorage().removeProfilePicture(currentProfilePictureUrl);
-    }
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'png', 'jpeg'],
-        allowMultiple: false,
-      );
-      imageFile = result!.files.first.bytes;
-      String profilePictureUrl =
-          await profileStorage().uploadFile(imageFile, result.files.first.name);
+      // Check if there is already a profile picture
+      String? currentProfilePictureUrl =
+          await profileStorage().fetchProfileImageUrl();
+      if (currentProfilePictureUrl != null && currentProfilePictureUrl != "") {
+        // Delete the current profile picture from Firebase Storage
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'png', 'jpeg'],
+          allowMultiple: false,
+        );
+        imageFile = result!.files.first.bytes;
+        String profilePictureUrl = await profileStorage()
+            .uploadFile(imageFile, result.files.first.name);
 
-      // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
-      // String profilePictureUrl = await uploadProfilePicture(imageFile);
+        // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
+        await profileStorage().removeProfilePicture(currentProfilePictureUrl);
+        profileStorage().saveProfilePictureUrl(profilePictureUrl);
 
-      profileStorage().saveProfilePictureUrl(profilePictureUrl);
+        // Refresh the profile screen to reflect the updated profile picture
+        setState(() {});
+      } else {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'png', 'jpeg'],
+          allowMultiple: false,
+        );
+        imageFile = result!.files.first.bytes;
+        String profilePictureUrl = await profileStorage()
+            .uploadFile(imageFile, result.files.first.name);
 
-      // Refresh the profile screen to reflect the updated profile picture
-      setState(() {});
+        // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
+        // String profilePictureUrl = await uploadProfilePicture(imageFile);
+
+        profileStorage().saveProfilePictureUrl(profilePictureUrl);
+
+        // Refresh the profile screen to reflect the updated profile picture
+        setState(() {});
+      }
     } catch (e) {
       print(e);
     }
@@ -148,12 +164,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
       child: CircleAvatar(
         radius: 100,
-        backgroundColor: Colors.grey.shade400,
-        child: const Icon(
-          Icons.person,
-          color: Colors.white,
-          size: 100,
-        ),
+        backgroundColor: Colors.grey.shade200,
+        backgroundImage: const NetworkImage(
+            "https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"),
       ),
     );
   }

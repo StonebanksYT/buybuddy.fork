@@ -5,7 +5,7 @@ import 'package:flutter_auth/firebase_options.dart';
 import 'package:flutter_auth/routegenerator.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-      initialRoute: '/dashboard',
+      initialRoute: '/home',
       onGenerateRoute: RouteGenerator.generateRoute,
       // home: WelcomeScreen(),
     );

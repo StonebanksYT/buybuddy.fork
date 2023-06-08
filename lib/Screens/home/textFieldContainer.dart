@@ -10,12 +10,12 @@ class TextFieldContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       width: 250,
       height: 35,
       decoration: BoxDecoration(
-        color: Color(0xffececec),
+        color: const Color(0xffececec),
         borderRadius: BorderRadius.circular(29),
       ),
       child: child,
