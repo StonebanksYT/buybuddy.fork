@@ -45,9 +45,8 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-      initialRoute: '/home',
+      initialRoute: '/',
       onGenerateRoute: RouteGenerator.generateRoute,
-      // home: WelcomeScreen(),
     );
   }
 }

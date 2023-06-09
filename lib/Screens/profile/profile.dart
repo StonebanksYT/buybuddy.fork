@@ -63,8 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await profileStorage().removeProfilePicture(currentProfilePictureUrl);
         profileStorage().saveProfilePictureUrl(profilePictureUrl);
 
-        // Refresh the profile screen to reflect the updated profile picture
-        setState(() {});
+      
       } else {
         FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.custom,
@@ -80,8 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         profileStorage().saveProfilePictureUrl(profilePictureUrl);
 
-        // Refresh the profile screen to reflect the updated profile picture
-        setState(() {});
+   
       }
     } catch (e) {
       print(e);
