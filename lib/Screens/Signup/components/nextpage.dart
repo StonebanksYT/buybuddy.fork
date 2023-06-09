@@ -1,11 +1,7 @@
-///This is a Flutter code for a sign-up page. It imports necessary packages such as FirebaseAuth, FirebaseDatabase, Flutter, Get, Fluttertoast, and UserIdController. It defines a FieldStyle widget that creates a text field with a label and a border. The NextPageOfSignUpPage widget is a stateful widget that fetches user credentials from the sign-up body and creates a new user account in Firebase Authentication and Firebase Realtime Database. It also allows the user to choose between creating a school or college account and fills in the necessary details such as the school or college name and address. Finally, it has two buttons for going back and creating the account.
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseSignup.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:get/get.dart';
-import '/Screens/home/home.dart';
 import 'package:flutter_auth/Screens/utils/loginSignUpAppBar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
@@ -16,13 +12,12 @@ class FieldStyle extends StatefulWidget {
   final String fieldName;
   final Function(String) onChanged;
   TextEditingController controller;
-  String initialText;
   FieldStyle(
       {Key? key,
       required this.fieldName,
       required this.controller,
       required this.onChanged,
-      required this.initialText})
+      })
       : super(key: key);
 
   @override
@@ -30,11 +25,14 @@ class FieldStyle extends StatefulWidget {
 }
 
 class _FieldStyleState extends State<FieldStyle> {
-  @override
-  void initState() {
-    super.initState();
-    widget.controller = TextEditingController(text: widget.initialText);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   widget.controller = TextEditingController(text: widget.);
+  //   setState(() {
+  //     print("fieldstyle ${widget.controller.text}");
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +84,7 @@ class NextPageOfSignUpPage extends StatefulWidget {
   final String mobileNumber;
   final String emailAddress;
   final String password;
-  NextPageOfSignUpPage(
+  const NextPageOfSignUpPage(
       {Key? key,
       required this.firstName,
       required this.lastName,
@@ -101,29 +99,29 @@ class NextPageOfSignUpPage extends StatefulWidget {
 class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
   var instituteNameController = TextEditingController();
   var instituteLocationController = TextEditingController();
-  Controller controller = Get.find<Controller>();
+  Controller controller = Get.put(Controller());
   UserIdController userIdController = Get.put(UserIdController());
   Widget _buildSchoolDetails() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FieldStyle(
+       FieldStyle(
           fieldName: "School Name",
           onChanged: (p0) {
             controller.setInstituteName(p0);
+            print("name ${controller.instituteName.value}");
           },
           controller: instituteNameController,
-          initialText: controller.instituteName.value,
-        ),
-        const SizedBox(height: 20),
-        FieldStyle(
+        )
+,        const SizedBox(height: 20),
+       FieldStyle(
           fieldName: "School Address",
           onChanged: (p0) {
             controller.setInstituteLocation(p0);
+            print("location ${controller.instituteLocation.value}");
           },
           controller: instituteLocationController,
-          initialText: controller.instituteLocation.value,
-        ),
+        )
       ],
     );
   }
@@ -132,21 +130,26 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        FieldStyle(
+       FieldStyle(
           fieldName: "College Name",
           onChanged: (p0) {
             controller.setInstituteName(p0);
+            print("name ${controller.instituteName.value}");
+
           },
           controller: instituteNameController,
-          initialText: controller.instituteName.value,
-        ),
-        const SizedBox(height: 20),
-        FieldStyle(
+          
+        )
+,        const SizedBox(height: 20),
+       FieldStyle(
             fieldName: "College Address",
             onChanged: (p0) {
               controller.setInstituteLocation(p0);
+            print("location ${controller.instituteLocation.value}");
+
             },
-            controller: instituteLocationController,initialText: controller.instituteLocation.value),
+            controller: instituteLocationController,
+            )
       ],
     );
   }
@@ -165,10 +168,10 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
                 color: Colors.amber,
                 width: size.width * 0.4,
               ),
-              Container(
+              SizedBox(
                 width: size.width * 0.6,
                 child: Center(
-                  child: Container(
+                  child: SizedBox(
                     width: 450,
                     child: SingleChildScrollView(
                       child: Column(
@@ -280,8 +283,9 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
                                   onPressed: () async {
                                     var instituteName =
                                         controller.instituteName.value.trim();
-                                    var instituteLocation =
-                                        controller.instituteLocation.value.trim();
+                                    var instituteLocation = controller
+                                        .instituteLocation.value
+                                        .trim();
                                     if (controller
                                             .instituteType.value.isEmpty ||
                                         instituteName.isEmpty ||
@@ -318,7 +322,7 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
                                       backgroundColor: Colors.white,
                                       shadowColor: Colors.white),
                                   child: controller.signUpLoading.value
-                                      ? CircularProgressIndicator()
+                                      ? const CircularProgressIndicator()
                                       : const Text(
                                           "Create Account",
                                           style: TextStyle(

@@ -2,7 +2,6 @@
 import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/home/homePageAppBar.dart';
 import 'package:flutter_auth/Screens/home/sideBarMenu.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_auth/Screens/profile/tabs/yourOrders.dart';
 import 'package:flutter_auth/Screens/profile/tabs/yourProducts.dart';
 import 'package:flutter_auth/Screens/utils/btnDesigns.dart';
 import 'package:flutter_auth/Screens/utils/textDesigns.dart';
-import 'package:flutter_auth/models/userModel.dart';
 import 'package:get/get.dart';
 import 'profileutils/profileComponents.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,60 +36,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     const YourProducts()
   ];
   /// since the data is getting fetched from firebase realtime database, a future method is used to wait for the data
-  Future<Widget> profileScreen() async {
-    try {
-      Controller controller = Get.put(Controller());
-      UserIdController userIdController = Get.put(UserIdController());
-
-      /// fetching user data corresponding to the user currently logged in
-      DatabaseReference userRef = FirebaseDatabase.instance
-          .ref()
-          .child("users")
-          .child(userIdController.userid.value);
-
-      /// delaying the execution of the code until the userRef has completed its operation
-      await Future.delayed(Duration.zero, () {
-        userRef.onValue.listen((event) {
-          Object? data = event.snapshot.value;
-          Map<String, dynamic> dataMap = data as Map<String, dynamic>;
-          // storing profile information from firebase into controller
-          controller.setUserModel(UserModel(
-              firstName:
-                  "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
-              lastName:
-                  "${dataMap["lastName"][0].toUpperCase() + dataMap["lastName"].substring(1)}",
-              mobileNumber: dataMap["mobileNumber"],
-              email: dataMap["email"],
-              instituteType: dataMap["instituteType"],
-              instituteName:
-                  "${dataMap["instituteName"][0].toUpperCase() + dataMap["instituteName"].substring(1)}",
-              instituteLocation:
-                  "${dataMap["instituteLocation"][0].toUpperCase() + dataMap["instituteLocation"].substring(1)}"));
-        });
-      });
-    } catch (e) {
-      Text("${e}");
-    }
-    return Container();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-
-        /// taking homePage function as future value which contains data of homepage function
-        future: profileScreen(),
-        builder: (context, snapshot) {
-          /// Future with no errors
-          if (snapshot.connectionState == ConnectionState.done &&
-              !snapshot.hasError) {
-            final data = snapshot.data;
-            if (data == null) {
-              return Container(
-                child: const Text('Empty loaded'),
-              );
-            } else {
-              return Scaffold(
+    return Scaffold(
                 backgroundColor: const Color.fromRGBO(245, 247, 248, 1),
                 endDrawer: SideBarMenu(),
                 body: SingleChildScrollView(
@@ -277,14 +225,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               );
-            }
-          } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasError) {
-            return Text("The error ${snapshot.error} has occured");
-          } else {
-            /// Returning loading screen when program needs to wait while loading the next Screen
-            return const CircularProgressIndicator();
-          }
-        });
+            
   }
 }
