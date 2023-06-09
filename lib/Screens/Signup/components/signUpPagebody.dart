@@ -2,8 +2,11 @@
 /// Here, some checks are done before heading towards next page.
 /// checks are: password matches confirm password
 
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'nextpage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,12 +27,14 @@ extension EmailValidator on String {
 class SignUpPageBody extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final firstNameController = TextEditingController();
-  final  lastNameController = TextEditingController();
-  final  mobileNumberController = TextEditingController();
-  final  emailController = TextEditingController();
-  final  passwordController = TextEditingController();
-  final  confirmPasswordController = TextEditingController();
-  Controller controller=Get.put(Controller());
+  final lastNameController = TextEditingController();
+  final mobileNumberController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  Controller controller = Get.put(Controller());
+
+  SignUpPageBody({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,9 +45,10 @@ class SignUpPageBody extends StatelessWidget {
         Expanded(
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 flex: 2,
-                child: Center(child: Text("Let see")),
+                child:
+                    Center(child: SvgPicture.asset("assets/icons/signup.svg")),
               ),
               Expanded(
                 flex: 3,
@@ -51,7 +57,7 @@ class SignUpPageBody extends StatelessWidget {
                     child: SizedBox(
                       width: 410,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             height: 140,
@@ -139,14 +145,35 @@ class SignUpPageBody extends StatelessWidget {
                                         textInputAction: TextInputAction.next),
                                   ],
                                 ),
-                                CustomTextField(
-                                    controller: mobileNumberController,
-                                    width: 410,
-                                    FieldName: "Mobile Number",
-                                    validator: fieldValidations['mobileNumber'],
-                                    isObscure: false,
-                                    keyboardType: TextInputType.number,
-                                    textInputAction: TextInputAction.next),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 163,
+                                        child: CountryPickerDropdown(
+                                          initialValue: 'in',
+                                          itemBuilder: _buildDropdownItem,
+                                          onValuePicked: (Country country) {
+                                            print(country.name);
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: CustomTextField(
+                                            controller: mobileNumberController,
+                                            width: 200,
+                                            FieldName: "Mobile Number",
+                                            validator: fieldValidations[
+                                                'mobileNumber'],
+                                            isObscure: false,
+                                            keyboardType: TextInputType.number,
+                                            textInputAction:
+                                                TextInputAction.next),
+                                      ),
+                                    ]),
                                 Column(
                                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: <Widget>[
@@ -159,7 +186,6 @@ class SignUpPageBody extends StatelessWidget {
                                       keyboardType: TextInputType.emailAddress,
                                       textInputAction: TextInputAction.next,
                                     ),
-                                    passwordFormat(),
                                     CustomTextField(
                                       controller: passwordController,
                                       width: 410,
@@ -171,14 +197,19 @@ class SignUpPageBody extends StatelessWidget {
                                       textInputAction: TextInputAction.done,
                                       hintText: "6+ characters",
                                     ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: passwordFormat(),
+                                    ),
                                     CustomTextField(
                                       width: 410,
                                       controller: confirmPasswordController,
                                       FieldName: "Confirm Password",
                                       validator: (val) {
-                                        if (val!.isEmpty)
+                                        if (val!.isEmpty) {
                                           return 'Empty';
-                                        else if (val !=
+                                        } else if (val !=
                                             passwordController.text) {
                                           return 'Password do not match';
                                         }
@@ -282,3 +313,15 @@ class SignUpPageBody extends StatelessWidget {
     );
   }
 }
+
+Widget _buildDropdownItem(Country country) => Container(
+      child: Row(
+        children: <Widget>[
+          CountryPickerUtils.getDefaultFlagImage(country),
+          const SizedBox(
+            width: 8.0,
+          ),
+          Text("+${country.phoneCode}(${country.isoCode})"),
+        ],
+      ),
+    );

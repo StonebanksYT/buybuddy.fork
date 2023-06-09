@@ -116,6 +116,8 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
 ,        const SizedBox(height: 20),
        FieldStyle(
           fieldName: "School Address",
+          onChanged: (p1) {
+            controller.setInstituteLocation(p1);
           onChanged: (p0) {
             controller.setInstituteLocation(p0);
             print("location ${controller.instituteLocation.value}");
@@ -149,6 +151,7 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
 
             },
             controller: instituteLocationController,
+            initialText: controller.instituteLocation.value),
             )
       ],
     );
@@ -156,6 +159,7 @@ class _NextPageOfSignUpPageState extends State<NextPageOfSignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    controller.setsignUpLoading(false);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(

@@ -29,13 +29,9 @@ class LoginSignUpAppBar extends StatelessWidget{
                 ])),
                 InkWell(onTap: (){
                   if(isLogin==true){
-                    Navigator.push(context, MaterialPageRoute(builder: ((context) {
-                      return const SignUpScreen();
-                    })));
+                    Navigator.pushNamed(context, '/signup');
                   }else{
-                    Navigator.push(context, MaterialPageRoute(builder: ((context) {
-                      return LoginScreen();
-                    })));
+                    Navigator.pushNamed(context,'/login' );
                   }
                 },hoverColor: Colors.transparent,child: Text(isLogin==true?"Sign Up  ":"Sign In  ",style: const TextStyle(color: Color(0xff0a46fc), fontSize: 14))),
                 const SizedBox(width: 20,)

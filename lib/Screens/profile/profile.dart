@@ -1,6 +1,7 @@
-/// Profile page which includes information of user
-import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
+import 'dart:typed_data';
+import 'dart:html' as html;
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
+import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/home/homePageAppBar.dart';
@@ -15,9 +16,10 @@ import 'package:get/get.dart';
 import 'profileutils/profileComponents.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
+import 'package:file_picker/file_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -27,25 +29,196 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /// Variables
+  Uint8List? imageFile = Uint8List(2);
+  late String? profileimg;
   VisibilityController visibilityController = Get.put(VisibilityController());
   Controller controller = Get.put(Controller());
+  final GlobalKey imageKey = GlobalKey();
+
   UserIdController userIdController = Get.put(UserIdController());
   List<Widget> pages = [
     PersonalInfo(),
     const YourOrders(),
     const YourProducts()
   ];
+  Future<void> chooseProfilePicture() async {
+    try {
+      // Check if there is already a profile picture
+      String? currentProfilePictureUrl =
+          await profileStorage().fetchProfileImageUrl();
+      if (currentProfilePictureUrl != null && currentProfilePictureUrl != "") {
+        // Delete the current profile picture from Firebase Storage
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'png', 'jpeg'],
+          allowMultiple: false,
+        );
+        imageFile = result!.files.first.bytes;
+        String profilePictureUrl = await profileStorage()
+            .uploadFile(imageFile, result.files.first.name);
+
+        // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
+        await profileStorage().removeProfilePicture(currentProfilePictureUrl);
+        profileStorage().saveProfilePictureUrl(profilePictureUrl);
+
+        // Refresh the profile screen to reflect the updated profile picture
+        setState(() {});
+      } else {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['jpg', 'png', 'jpeg'],
+          allowMultiple: false,
+        );
+        imageFile = result!.files.first.bytes;
+        String profilePictureUrl = await profileStorage()
+            .uploadFile(imageFile, result.files.first.name);
+
+        // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
+        // String profilePictureUrl = await uploadProfilePicture(imageFile);
+
+        profileStorage().saveProfilePictureUrl(profilePictureUrl);
+
+        // Refresh the profile screen to reflect the updated profile picture
+        setState(() {});
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   /// since the data is getting fetched from firebase realtime database, a future method is used to wait for the data
-  
+  Future<Widget> profileScreen() async {
+    try {
+      Controller controller = Get.put(Controller());
+      UserIdController userIdController = Get.put(UserIdController());
+      profileimg = await profileStorage().fetchProfileImageUrl();
+      print(profileimg);
+
+      /// fetching user data corresponding to the user currently logged in
+      DatabaseReference userRef = FirebaseDatabase.instance
+          .ref()
+          .child("users")
+          .child(userIdController.userid.value);
+
+      /// delaying the execution of the code until the userRef has completed its operation
+      await Future.delayed(Duration.zero, () {
+        userRef.onValue.listen((event) {
+          Object? data = event.snapshot.value;
+          Map<String, dynamic> dataMap = data as Map<String, dynamic>;
+          // storing profile information from firebase into controller
+          if (profileimg != null && profileimg != "") {
+            controller.setProfileimg(profileimg);
+          }
+
+          controller.setUserModel(UserModel(
+              firstName:
+                  "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
+              lastName:
+                  "${dataMap["lastName"][0].toUpperCase() + dataMap["lastName"].substring(1)}",
+              mobileNumber: dataMap["mobileNumber"],
+              email: dataMap["email"],
+              instituteType: dataMap["instituteType"],
+              instituteName:
+                  "${dataMap["instituteName"][0].toUpperCase() + dataMap["instituteName"].substring(1)}",
+              instituteLocation:
+                  "${dataMap["instituteLocation"][0].toUpperCase() + dataMap["instituteLocation"].substring(1)}",
+              profileimg: dataMap["profileimg"]));
+        });
+      });
+    } catch (e) {
+      Text("$e");
+    }
+    return Container();
+  }
+
+  Widget imagewidget() {
+    return MouseRegion(
+      onEnter: (_) {
+        html.document.onContextMenu.listen((event) {
+          event.preventDefault();
+        });
+      },
+      child: InkWell(
+        onTap: () {
+          chooseProfilePicture();
+        },
+        onSecondaryTap: () {
+          showPopupMenu();
+        },
+        child: CircleAvatar(
+          key: imageKey,
+          radius: 100,
+          backgroundImage: NetworkImage(controller.userModel.value.profileimg!),
+          backgroundColor: Colors.grey.shade400,
+        ),
+      ),
+    );
+  }
+
+  Widget PersonIconWidget() {
+    return InkWell(
+      onTap: () {
+        chooseProfilePicture();
+      },
+      child: CircleAvatar(
+        radius: 100,
+        backgroundColor: Colors.grey.shade200,
+        backgroundImage: const NetworkImage(
+            "https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"),
+      ),
+    );
+  }
+
+  void showPopupMenu() async {
+    final RenderBox imageRenderBox =
+        imageKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final menuPosition = RelativeRect.fromRect(
+      Rect.fromPoints(
+        imageRenderBox.localToGlobal(Offset.zero, ancestor: overlay),
+        imageRenderBox.localToGlobal(
+            imageRenderBox.size.bottomRight(Offset.zero),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+    final value = await showMenu(
+      context: context,
+      position: menuPosition,
+      items: [
+        const PopupMenuItem(
+          value: 'change',
+          child: Text('Change Image'),
+        ),
+        const PopupMenuItem(
+          value: 'remove',
+          child: Text('Remove Image'),
+        ),
+      ],
+    );
+
+    if (value == 'change') {
+      // Handle change image action
+      chooseProfilePicture();
+    } else if (value == 'remove') {
+      // Handle remove image action
+      final profileimg = await profileStorage().fetchProfileImageUrl();
+      await profileStorage().removeProfilePicture(profileimg);
+      controller.setProfileimg("");
+      print(profileimg);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
                 backgroundColor: const Color.fromRGBO(245, 247, 248, 1),
-                endDrawer: SideBarMenu(),
+                endDrawer: const SideBarMenu(),
                 body: SingleChildScrollView(
                   child: Column(
                     children: [
-                      HomePageAppBar(),
+                      const HomePageAppBar(),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(230, 20, 230, 0),
                         child: Column(
@@ -63,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           "Nunito",
                                           textStyle: const TextStyle(
                                               color: Colors.black,
-                                              fontSize: 20,
+                                              fontSize: 25,
                                               fontWeight: FontWeight.bold),
                                         )),
                                     Row(
@@ -76,43 +249,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           child: ElevatedButton(
                                             onPressed: () {
                                               showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return EditProfileDialog(
-                                                      instituteLocation:
-                                                          controller
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return EditProfileDialog(
+                                                          instituteLocation:
+                                                              controller
+                                                                  .userModel
+                                                                  .value
+                                                                  .instituteLocation,
+                                                          instituteName:
+                                                              controller
+                                                                  .userModel
+                                                                  .value
+                                                                  .instituteName,
+                                                          language:
+                                                              "English, Hindi",
+                                                          mobileNumber:
+                                                              controller
+                                                                  .userModel
+                                                                  .value
+                                                                  .mobileNumber,
+                                                          email: controller
                                                               .userModel
                                                               .value
-                                                              .instituteLocation,
-                                                      instituteName: controller
-                                                          .userModel
-                                                          .value
-                                                          .instituteName,
-                                                      language:
-                                                          "English, Hindi",
-                                                      mobileNumber: controller
-                                                          .userModel
-                                                          .value
-                                                          .mobileNumber,
-                                                      firstName: controller
-                                                          .userModel
-                                                          .value
-                                                          .firstName,
-                                                      lastName: controller
-                                                          .userModel
-                                                          .value
-                                                          .lastName,
-                                                    );
-                                                  }).then((value) => setState(
-                                                      () {
-                                                    if (value == null) {
-                                                      /// Takes care of the situation when no theme is selected.
-                                                      return;
-                                                    } else {
-                                                      print("value ${value}");
-                                                    }
-                                                  }));
+                                                              .email,
+                                                          firstName: controller
+                                                              .userModel
+                                                              .value
+                                                              .firstName,
+                                                          lastName: controller
+                                                              .userModel
+                                                              .value
+                                                              .lastName,
+                                                        );
+                                                      })
+                                                  .then((value) => setState(() {
+                                                        if (value == null) {
+                                                          /// Takes care of the situation when no theme is selected.
+                                                          return;
+                                                        } else {
+                                                          print("value $value");
+                                                        }
+                                                      }));
                                             },
                                             style: CustomElevatedBtnStyle(),
                                             child: Row(
@@ -135,11 +314,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 100,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: ((context) {
-                                                return const SignUpScreen();
-                                              })));
+                                              Navigator.pushNamed(
+                                                  context, '/signup');
                                             },
                                             style: CustomElevatedBtnStyle(),
                                             child: Text("Sign Out",
@@ -163,17 +339,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       flex: 1,
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
-                                          const CircleAvatar(
-                                              backgroundColor: Color.fromRGBO(
-                                                  231, 233, 237, 1),
-                                              radius: 50,
-                                              child: Icon(
-                                                Icons.person,
-                                                size: 50,
-                                                color: Colors.white,
-                                              )),
+                                          Obx(() {
+                                            return controller.userModel.value
+                                                            .profileimg !=
+                                                        null &&
+                                                    controller.userModel.value
+                                                            .profileimg !=
+                                                        ""
+                                                ? imagewidget()
+                                                : PersonIconWidget();
+                                          }),
                                           const SizedBox(
                                             height: 10,
                                           ),
@@ -188,7 +365,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             },
                                           ),
                                           const SizedBox(
-                                            height: 10,
+                                            height: 5,
                                           ),
                                           Obx(() {
                                             return CustomText(

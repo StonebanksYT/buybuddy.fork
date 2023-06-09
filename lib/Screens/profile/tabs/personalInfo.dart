@@ -1,6 +1,7 @@
 /// Personal Info includes User name, email,language, institute type, institute name, institute location,ways to contact
 
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/Screens/utils/textDesigns.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:get/get.dart';
@@ -12,8 +13,7 @@ class PersonalInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller
-                  .setInstituteType(controller.userModel.value.instituteType);
+    controller.setInstituteType(controller.userModel.value.instituteType);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -39,6 +39,7 @@ class PersonalInfo extends StatelessWidget {
           children: [
             Obx(
               () => CustomCard(
+                controller: controller,
                 title: "Name",
                 titleValue:
                     "${controller.userModel.value.firstName} ${controller.userModel.value.lastName}",
@@ -50,7 +51,8 @@ class PersonalInfo extends StatelessWidget {
             ),
             Obx(
               () => CustomCard(
-                title: "Contactable at",
+                controller: controller,
+                title: "Contact Details",
                 titleValue:
                     "${controller.userModel.value.email}\n${controller.userModel.value.mobileNumber}",
                 icon: Icons.connect_without_contact_outlined,
@@ -64,10 +66,12 @@ class PersonalInfo extends StatelessWidget {
         Row(
           children: [
             Obx(() {
-              
               return CustomCard(
+                  controller: controller,
                   title: "Institute Type",
-                  titleValue: "${controller.userModel.value.instituteType[0].toUpperCase() + controller.userModel.value.instituteType.substring(1)}",
+                  titleValue: controller.userModel.value.instituteType[0]
+                          .toUpperCase() +
+                      controller.userModel.value.instituteType.substring(1),
                   icon: Icons.school_outlined);
             }),
             const SizedBox(
@@ -75,6 +79,7 @@ class PersonalInfo extends StatelessWidget {
             ),
             Obx(
               () => CustomCard(
+                  controller: controller,
                   title: "Institute Name",
                   titleValue: controller.userModel.value.instituteName,
                   icon: Icons.location_city_outlined),
@@ -88,11 +93,13 @@ class PersonalInfo extends StatelessWidget {
           children: [
             Obx(
               () => CustomCard(
+                  controller: controller,
                   title: "Institute Location",
                   titleValue: controller.userModel.value.instituteLocation,
                   icon: Icons.place_outlined),
             ),
             CustomCard(
+                controller: controller,
                 title: "Languages",
                 titleValue: "English, Hindi",
                 icon: Icons.language_outlined),
@@ -107,11 +114,13 @@ class CustomCard extends StatelessWidget {
   String title;
   String titleValue;
   IconData icon;
+  Controller controller;
   CustomCard(
       {Key? key,
       required this.title,
       required this.titleValue,
-      required this.icon})
+      required this.icon,
+      required this.controller})
       : super(key: key);
 
   @override
@@ -119,11 +128,26 @@ class CustomCard extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: SizedBox(
-          height: 120,
+          height: 125,
 
           /// added inkwell just for future animation purpose
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return EditProfileDialog(
+                      instituteLocation:
+                          controller.userModel.value.instituteLocation,
+                      instituteName: controller.userModel.value.instituteName,
+                      language: "English, Hindi",
+                      mobileNumber: controller.userModel.value.mobileNumber,
+                      email: controller.userModel.value.email,
+                      firstName: controller.userModel.value.firstName,
+                      lastName: controller.userModel.value.lastName,
+                    );
+                  });
+            },
             borderRadius: BorderRadius.circular(20),
             child: Card(
               elevation: 0,

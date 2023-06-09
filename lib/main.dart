@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_auth/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_auth/firebase_options.dart';
+import 'package:flutter_auth/routegenerator.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -45,6 +46,8 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
+      initialRoute: '/home',
+      onGenerateRoute: RouteGenerator.generateRoute,
       home:  const WelcomeScreen(),
       // home: WelcomeScreen(),
     );

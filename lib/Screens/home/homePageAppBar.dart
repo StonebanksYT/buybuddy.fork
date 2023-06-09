@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'textFieldContainer.dart';
 import 'package:flutter_auth/Screens/sell/productForm.dart';
 
-class HomePageAppBar extends StatelessWidget{
-  HomePageAppBar({Key? key}) : super(key: key);
+class HomePageAppBar extends StatelessWidget {
+  const HomePageAppBar({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,35 +15,53 @@ class HomePageAppBar extends StatelessWidget{
           children: [
             Container(
               margin: const EdgeInsets.only(left: 10),
-              child: const Text(
-                "BuyBuddy",
-                style: TextStyle(color: Colors.black, fontSize: 25),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/home');
+                },
+                child: const Text(
+                  "BuyBuddy",
+                  style: TextStyle(color: Colors.black, fontSize: 25),
+                ),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(right: 10),
               child: Row(
                 children: [
-                  customButton(Icons.home, "HOME"),
+                  customButton(Icons.home, "HOME", onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  }),
                   // const SizedBox(
                   //   width: 10,
                   // ),
-                   SizedBox(width: 30,child: ElevatedButton(onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return ProductForm();
-                    },));
-                  },child: Text("d"),),),
-                  customButton(Icons.shopping_cart, "CART"),
+                  SizedBox(
+                    width: 30,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return ProductForm();
+                          },
+                        ));
+                      },
+                      child: const Text("t"),
+                    ),
+                  ),
+                  customButton(Icons.shopping_cart, "CART", onPressed: () {
+                    Navigator.pushNamed(context, '/cart');
+                  }),
                   // const SizedBox(
                   //   width: 10,
                   // ),
                   const SearchBar(),
-                 
 
                   // const SizedBox(
                   //   width: 10,
                   // ),
-                  customButton(Icons.category, "FILTER"),
+                  customButton(Icons.category, "FILTER", onPressed: () {
+                    print("display filter");
+                  }),
                   const SizedBox(
                     width: 10,
                   ),
@@ -59,10 +77,12 @@ class HomePageAppBar extends StatelessWidget{
         ));
   }
 
-  Widget customButton(IconData icon, String text) {
+  Widget customButton(IconData icon, String text, {Function? onPressed}) {
     return TextButton(
         style: TextButton.styleFrom(elevation: 0),
-        onPressed: () {},
+        onPressed: () {
+          onPressed;
+        },
         child: Row(
           children: [
             Icon(

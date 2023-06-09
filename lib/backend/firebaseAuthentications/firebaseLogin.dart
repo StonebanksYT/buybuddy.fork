@@ -27,6 +27,11 @@ class FirebaseLogin {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+      userIdController.setUserId(credential.user!.uid);
+      print(credential.user!.uid);
+      // NrT25T1JVoa6FEFZjjyswV7zI5A3
+      Navigator.pushNamed(context, '/home');
+      controller.setloginLoading(false);
       User? user = credential.user;
       if (user != null && user.emailVerified == true) {
         userIdController.setUserId(credential.user!.uid);

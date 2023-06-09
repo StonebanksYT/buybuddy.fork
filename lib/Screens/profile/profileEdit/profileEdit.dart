@@ -14,18 +14,22 @@ class EditProfileDialog extends StatefulWidget {
   final String firstName;
   final String lastName;
   final String mobileNumber;
+  final String email;
   final String instituteName;
   final String language;
   final String instituteLocation;
+  final String? profileimg;
 
-  EditProfileDialog({
+  const EditProfileDialog({
     Key? key,
     required this.firstName,
     required this.lastName,
     required this.mobileNumber,
+    required this.email,
     required this.instituteName,
     required this.language,
     required this.instituteLocation,
+    this.profileimg,
   }) : super(key: key);
 
   @override
@@ -36,10 +40,12 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _mobileNumberController;
+  late TextEditingController _emailController;
   late TextEditingController _instituteNameController;
   late TextEditingController _instituteTypeController;
   late TextEditingController _languageController;
   late TextEditingController _instituteLocationController;
+  late TextEditingController _profileImageController;
   Controller controller = Get.put(Controller());
   UserIdController userIdController = Get.find<UserIdController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -51,6 +57,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     _lastNameController = TextEditingController(text: widget.lastName);
 
     _mobileNumberController = TextEditingController(text: widget.mobileNumber);
+    _emailController = TextEditingController(text: widget.email);
     _instituteNameController =
         TextEditingController(text: widget.instituteName);
     _languageController = TextEditingController(text: widget.language);
@@ -63,6 +70,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _mobileNumberController.dispose();
+    _emailController.dispose();
     _instituteNameController.dispose();
     _languageController.dispose();
     _instituteLocationController.dispose();
@@ -72,7 +80,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      titlePadding: EdgeInsets.only(top: 10),
+      titlePadding: const EdgeInsets.only(top: 10),
       title: Center(
         child: Text(
           'Edit Personal Information',
@@ -80,7 +88,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
         ),
       ),
       children: [
-        Container(
+        SizedBox(
             width: 600,
             height: 450,
             child: FutureBuilder(
@@ -112,14 +120,14 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
               height: 35,
               width: 100,
               child: ElevatedButton(
-                child: Text("Cancel"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
                 style: CustomElevatedBtnStyle(),
+                child: Text("Cancel"),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             SizedBox(
@@ -131,6 +139,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                   var firstName = _firstNameController.text.trim();
                   var lastName = _lastNameController.text.trim();
                   var mobileNumber = _mobileNumberController.text.trim();
+                  var email = _emailController.text.trim();
                   var instituteName = _instituteNameController.text.trim();
                   var instituteLocation =
                       _instituteLocationController.text.trim();
@@ -138,21 +147,23 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                       instituteLocation.isEmpty ||
                       firstName.isEmpty ||
                       lastName.isEmpty ||
-                      mobileNumber.isEmpty) {
+                      mobileNumber.isEmpty ||
+                      email.isEmpty) {
                     // show error toas
                     Fluttertoast.showToast(msg: 'Please fill all fields');
                     return;
                   } else {
                     if (_formKey.currentState!.validate()) {
                       try {
-                        DatabaseReference _userRef = FirebaseDatabase.instance
+                        DatabaseReference userRef = FirebaseDatabase.instance
                             .ref()
                             .child("users")
                             .child(userIdController.userid.value);
-                        await _userRef.update({
+                        await userRef.update({
                           'firstName': firstName,
                           'lastName': lastName,
                           'mobileNumber': mobileNumber,
+                          'email': email,
                           'instituteType': controller.instituteType.value,
                           'instituteName': instituteName,
                           'instituteLocation': instituteLocation,
@@ -161,6 +172,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                           'firstName': _firstNameController.text,
                           'lastName': _lastNameController.text,
                           'mobileNumber': _mobileNumberController.text,
+                          'email': _emailController.text,
                           'instituteName': _instituteNameController.text,
                           'instituteType': controller.instituteType.value,
                           'language': _languageController.text,
@@ -177,10 +189,10 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                     }
                   }
                 },
-                child: Text('Save'),
+                child: const Text('Save'),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             )
           ],
@@ -206,7 +218,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
                 validator: fieldValidations['firstName']),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             CustomTextField(
@@ -227,7 +239,15 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             keyboardType: TextInputType.name,
             textInputAction: TextInputAction.next,
             validator: fieldValidations['mobileNumber']),
-        Container(
+        CustomTextField(
+            FieldName: "Email Address",
+            width: 500,
+            controller: _emailController,
+            isObscure: false,
+            keyboardType: TextInputType.name,
+            textInputAction: TextInputAction.next,
+            validator: fieldValidations['email']),
+        SizedBox(
           width: 500,
           child: Row(children: [
             Row(
@@ -273,7 +293,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             ),
           ]),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         CustomTextField(
@@ -300,7 +320,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             keyboardType: TextInputType.name,
             textInputAction: TextInputAction.next,
             validator: fieldValidations['name']),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
       ]),
     ));
   }

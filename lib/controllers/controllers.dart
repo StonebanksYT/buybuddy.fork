@@ -3,10 +3,6 @@ import 'package:flutter_auth/models/userModel.dart';
 import 'package:get/get.dart';
 
 class Controller extends GetxController {
-  RxBool isFirebaseInitialized=false.obs;
-  setIsFirebaseInitalized(bool value){
-    isFirebaseInitialized.value=value;
-  }
   Rx<UserModel> userModel = UserModel(
           firstName: "",
           lastName: "",
@@ -14,7 +10,8 @@ class Controller extends GetxController {
           email: "",
           instituteType: "",
           instituteName: "",
-          instituteLocation: "")
+          instituteLocation: "",
+          profileimg: "")
       .obs;
   setUserModel(UserModel model) {
     userModel.value = model;
@@ -46,6 +43,12 @@ class Controller extends GetxController {
     locationFilterValue.value = value;
   }
 
+  RxString? profileimg = "".obs;
+  setProfileimg(String? value) {
+    profileimg!.value = value!;
+  }
+
+
   RxList categoryFilterList = [].obs;
   addCategoryFilterList(String value) {
     categoryFilterList.add(value);
@@ -58,7 +61,6 @@ class Controller extends GetxController {
   RxBool loginLoading = false.obs;
   setloginLoading(bool value) {
     loginLoading.value = value;
-  }
 
   RxBool signUpLoading = false.obs;
   setsignUpLoading(bool value) {

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/backend/firebaseAuthentications/signUpEmailVerification.dart';
 import 'package:flutter_auth/Screens/emailVerificationScreen/emailVerification.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
@@ -17,18 +18,19 @@ class FirebaseSignUp {
   String instituteName;
   String instituteLocation;
   BuildContext context;
-  FirebaseSignUp(
-      {required this.context,
-      required this.emailAddress,
-      required this.firstName,
-      required this.instituteLocation,
-      required this.instituteName,
-      required this.instituteType,
-      required this.lastName,
-      required this.mobileNumber,
-      required this.password,
-      required this.userIdController});
-      Controller controller=Get.find<Controller>();
+  FirebaseSignUp({
+    required this.context,
+    required this.emailAddress,
+    required this.firstName,
+    required this.instituteLocation,
+    required this.instituteName,
+    required this.instituteType,
+    required this.lastName,
+    required this.mobileNumber,
+    required this.password,
+    required this.userIdController,
+  });
+  Controller controller = Get.find<Controller>();
   Future<void> firebaseSignUp() async {
     try {
       UserCredential credential =
