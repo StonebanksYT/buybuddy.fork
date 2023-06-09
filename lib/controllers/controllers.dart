@@ -47,7 +47,9 @@ class Controller extends GetxController {
   setProfileimg(String? value) {
     profileimg!.value = value!;
   }
-
+  // removeProfileimg(IconD value){
+  //   profileimg.value = "";
+  // }
 
   RxList categoryFilterList = [].obs;
   addCategoryFilterList(String value) {
@@ -61,18 +63,10 @@ class Controller extends GetxController {
   RxBool loginLoading = false.obs;
   setloginLoading(bool value) {
     loginLoading.value = value;
+  }
 
   RxBool signUpLoading = false.obs;
   setsignUpLoading(bool value) {
     signUpLoading.value = value;
-  }
-
-  RxBool canResendEmail = false.obs;
-  setCanResendEmail(bool value) {
-    canResendEmail.value = value;
-  }
-  RxBool isEmailVerified=false.obs;
-  setisEmailVerified(bool value){
-    isEmailVerified.value=value;
   }
 }

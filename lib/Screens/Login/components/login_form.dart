@@ -3,11 +3,13 @@
 // The form is wrapped in a SingleChildScrollView widget to allow for scrolling. The ElevatedButton widget is used to submit the form and authenticate the user. If the authentication is successful, the user is redirected to the HomePage widget. If there is an error, a customSnackBar is displayed to inform the user of the error.
 
 // The LoginForm widget also uses the UserIdController to set the user ID after successful authentication. The GoogleConnect widget is also included to allow the user to sign in with their Google account.
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseLogin.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:get/get.dart';
+import '../../home/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_auth/Screens/utils/customField.dart';
 import 'package:flutter_auth/Screens/utils/loginSignUpComponents.dart';
@@ -18,13 +20,14 @@ class LoginForm extends StatelessWidget {
   }) : super(key: key);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
  final  UserIdController userIdController = Get.put(UserIdController());
- final Controller controller=Get.put(Controller());
+ Controller controller=Get.put(Controller());
  var emailController = TextEditingController();
     var passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     print("on login form");
     BuildContext SnackContext = context;
+    List firebaseLoginParameters=[emailController,passwordController,context,SnackContext,userIdController];
     return SizedBox(
       width: 410,
       child: Column(
@@ -115,6 +118,12 @@ class LoginForm extends StatelessWidget {
             child: ElevatedButton(onPressed: ()async{
                controller.setloginLoading(true);
                 await FirebaseLogin(emailController: emailController, passwordController: passwordController, snackContext: SnackContext, context: context, userIdController: userIdController).firebaseLogin();
+                // if(auth.currentUser != null){
+                //   Navigator.push(context, MaterialPageRoute(builder: (ctx)=>const EmailVerificationScreen()));
+                // }
+                // setState(() {
+                //   _isLoading = false;
+                // });
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

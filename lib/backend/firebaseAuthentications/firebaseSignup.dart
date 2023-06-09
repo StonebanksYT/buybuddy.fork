@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/signUpEmailVerification.dart';
-import 'package:flutter_auth/Screens/emailVerificationScreen/emailVerification.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:get/get.dart';
