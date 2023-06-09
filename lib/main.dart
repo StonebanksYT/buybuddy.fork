@@ -3,13 +3,14 @@ import 'package:flutter_auth/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_auth/firebase_options.dart';
 import 'package:flutter_auth/routegenerator.dart';
+import 'firebase_options.dart';
 
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
           )),
       initialRoute: '/home',
       onGenerateRoute: RouteGenerator.generateRoute,
+      home:  const WelcomeScreen(),
       // home: WelcomeScreen(),
     );
   }
