@@ -1,4 +1,6 @@
 /// profile edit make user able to edit profile which is a showdialog box.
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/utils/btnDesigns.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -124,7 +126,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                   Navigator.of(context).pop();
                 },
                 style: CustomElevatedBtnStyle(),
-                child: Text("Cancel"),
+                child: const Text("Cancel"),
               ),
             ),
             const SizedBox(
@@ -231,14 +233,32 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                 validator: fieldValidations['lastName']),
           ],
         ),
-        CustomTextField(
-            FieldName: "Mobile Number",
-            width: 500,
-            controller: _mobileNumberController,
-            isObscure: false,
-            keyboardType: TextInputType.name,
-            textInputAction: TextInputAction.next,
-            validator: fieldValidations['mobileNumber']),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              width: 163,
+              child: CountryPickerDropdown(
+                initialValue: 'in',
+                itemBuilder: _buildDropdownItem,
+                onValuePicked: (Country country) {
+                  print(country.name);
+                },
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            CustomTextField(
+                FieldName: "Mobile Number",
+                width: 300,
+                controller: _mobileNumberController,
+                isObscure: false,
+                keyboardType: TextInputType.name,
+                textInputAction: TextInputAction.next,
+                validator: fieldValidations['mobileNumber']),
+          ],
+        ),
         CustomTextField(
             FieldName: "Email Address",
             width: 500,
@@ -249,49 +269,61 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
             validator: fieldValidations['email']),
         SizedBox(
           width: 500,
-          child: Row(children: [
-            Row(
-              children: [
-                Obx(
-                  () {
-                    return Radio(
-                      value: 'school',
-                      groupValue: controller.instituteType.value,
-                      onChanged: (value) {
-                        controller.setInstituteType(value as String);
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Institute Type',
+                style: GoogleFonts.getFont("Nunito",
+                    fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              Row(children: [
+                Row(
+                  children: [
+                    Obx(
+                      () {
+                        return Radio(
+                          value: 'school',
+                          groupValue: controller.instituteType.value,
+                          onChanged: (value) {
+                            controller.setInstituteType(value as String);
+                          },
+                        );
                       },
-                    );
-                  },
+                    ),
+                    const Text(
+                      'School',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                const Text(
-                  'School',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                const SizedBox(
+                  width: 20,
                 ),
-              ],
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Row(
-              children: [
-                Obx(
-                  () {
-                    return Radio(
-                      value: 'college',
-                      groupValue: controller.instituteType.value,
-                      onChanged: (value) {
-                        controller.setInstituteType(value as String);
+                Row(
+                  children: [
+                    Obx(
+                      () {
+                        return Radio(
+                          value: 'college',
+                          groupValue: controller.instituteType.value,
+                          onChanged: (value) {
+                            controller.setInstituteType(value as String);
+                          },
+                        );
                       },
-                    );
-                  },
+                    ),
+                    const Text(
+                      'College',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                const Text(
-                  'College',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ]),
+              ]),
+            ],
+          ),
         ),
         const SizedBox(
           height: 20,
@@ -325,3 +357,15 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
     ));
   }
 }
+
+Widget _buildDropdownItem(Country country) => Container(
+      child: Row(
+        children: <Widget>[
+          CountryPickerUtils.getDefaultFlagImage(country),
+          const SizedBox(
+            width: 8.0,
+          ),
+          Text("+${country.phoneCode}(${country.isoCode})"),
+        ],
+      ),
+    );

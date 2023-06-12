@@ -102,6 +102,7 @@ class SearchBar extends StatelessWidget {
     return TextFieldContainer(
       child: TextFormField(
         decoration: const InputDecoration(
+            // fillColor: Colors.transparent,
             border: InputBorder.none,
             icon: Icon(
               Icons.search,
