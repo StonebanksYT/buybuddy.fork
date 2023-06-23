@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'dart:html' as html;
+import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/home/homePageAppBar.dart';
 import 'package:flutter_auth/Screens/home/sideBarMenu.dart';
 import 'package:flutter_auth/Screens/profile/tabs/personalInfo.dart';
-import 'package:flutter_auth/controllers/visibilityController.dart';
 import 'package:flutter_auth/Screens/profile/tabs/yourOrders.dart';
 import 'package:flutter_auth/Screens/profile/tabs/yourProducts.dart';
 import 'package:flutter_auth/Screens/utils/btnDesigns.dart';
@@ -17,7 +17,6 @@ import 'package:flutter_auth/models/userModel.dart';
 import 'package:get/get.dart';
 import 'profileutils/profileComponents.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:file_picker/file_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -33,11 +32,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// Variables
   Uint8List? imageFile = Uint8List(2);
   late String? profileimg;
-  VisibilityController visibilityController = Get.put(VisibilityController());
-  Controller controller = Get.put(Controller());
+  Controller controller = Get.find<Controller>();
   final GlobalKey imageKey = GlobalKey();
 
-  UserIdController userIdController = Get.put(UserIdController());
   List<Widget> pages = [
     PersonalInfo(),
     const YourOrders(),
@@ -89,8 +86,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// since the data is getting fetched from firebase realtime database, a future method is used to wait for the data
   Future<Widget> profileScreen() async {
     try {
-      Controller controller = Get.put(Controller());
-      UserIdController userIdController = Get.put(UserIdController());
       profileimg = await profileStorage().fetchProfileImageUrl();
       print(profileimg);
 
@@ -98,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       DatabaseReference userRef = FirebaseDatabase.instance
           .ref()
           .child("users")
-          .child(userIdController.userid.value);
+          .child(controller.userid.value);
 
       /// delaying the execution of the code until the userRef has completed its operation
       await Future.delayed(Duration.zero, () {
@@ -329,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           child: ElevatedButton(
                                             onPressed: () {
                                               Navigator.pushNamed(
-                                                  context, '/signup');
+                                                  context, '/');
                                             },
                                             style: CustomElevatedBtnStyle(),
                                             child: Text("Sign Out",
@@ -404,7 +399,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     return Expanded(
                                         flex: 3,
                                         child: SingleChildScrollView(
-                                          child: pages[visibilityController
+                                          child: pages[controller
                                               .visibilityIndex.value],
                                         ));
                                   })

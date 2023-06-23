@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/home/home.dart';
 import 'package:flutter_auth/Screens/utils/loginSignUpComponents.dart';
@@ -30,7 +29,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         canResendEmail = true;
       });
     } catch (e) {
-      customSnackBar(context, e.toString());
+      customSnackbar(context,e.toString());
     }
   }
 
@@ -68,32 +67,33 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             appBar: AppBar(title: const Text("Email Verification")),
             body: Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                const Text(
-                  "A verification email has been sent",
-                  style: TextStyle(fontSize: 50),
-                ),
-                SizedBox(
-                  height: 30,
-                  width: 100,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.email),
-                    label: const Text("Resend Email"),
-                    onPressed: canResendEmail ? sendVerificationEmail : () {},
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                  width: 100,
-                  child: TextButton(
-                    child: const Text("Cancel"),
-                    onPressed: () async {
-                      return await FirebaseAuth.instance.signOut();
-                    },
-                  ),
-                )
-              ]),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "A verification email has been sent",
+                      style: TextStyle(fontSize: 50),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 100,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.email),
+                        label: const Text("Resend Email"),
+                        onPressed:
+                            canResendEmail ? sendVerificationEmail : () {},
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 100,
+                      child: TextButton(
+                        child: const Text("Cancel"),
+                        onPressed: () async {
+                          return await FirebaseAuth.instance.signOut();
+                        },
+                      ),
+                    )
+                  ]),
             ),
           );
   }

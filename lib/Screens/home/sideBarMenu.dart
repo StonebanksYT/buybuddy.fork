@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/Login/login_screen.dart';
-import 'package:flutter_auth/Screens/profile/profile.dart';
 
 class SideBarMenu extends StatefulWidget {
   const SideBarMenu({Key? key}) : super(key: key);

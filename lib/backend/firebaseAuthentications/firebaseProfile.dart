@@ -1,13 +1,11 @@
 import 'dart:typed_data';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter_auth/controllers/userIdController.dart';
-import 'package:get/get.dart';
+import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 
-UserIdController useridcontroller = Get.find<UserIdController>();
 
 class profileStorage {
-  String userid = useridcontroller.userid.value;
+  String userid = controller.userid.value;
 
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -33,7 +31,7 @@ class profileStorage {
       DatabaseReference userRef = FirebaseDatabase.instance
           .ref()
           .child('users')
-          .child(useridcontroller.userid.value);
+          .child(controller.userid.value);
 
       await userRef.update({
         'profileimg': profilePictureUrl,
@@ -61,7 +59,7 @@ class profileStorage {
       DatabaseReference userRef = FirebaseDatabase.instance
           .ref()
           .child('users')
-          .child(useridcontroller.userid.value);
+          .child(controller.userid.value);
 
       await userRef.update({
         'profileimg': "",
@@ -78,7 +76,7 @@ class profileStorage {
       DatabaseReference userRef = FirebaseDatabase.instance
           .ref()
           .child('users')
-          .child(useridcontroller.userid.value);
+          .child(controller.userid.value);
       DatabaseEvent event = await userRef.child('profileimg').once();
       String? profileImageUrl = event.snapshot.value.toString();
 

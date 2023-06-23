@@ -46,26 +46,27 @@ class GoogleConnect extends StatelessWidget {
   }
 }
 
-ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackBar(
-    BuildContext context, String inputText) {
-  return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Align(alignment: Alignment.topCenter, child: Text(inputText)),
-    backgroundColor: Colors.teal,
-    behavior: SnackBarBehavior.floating,
-    width: 300,
-    duration: const Duration(seconds: 3),
-    action: SnackBarAction(
-      label: 'Dismiss',
-      disabledTextColor: Colors.white,
-      textColor: Colors.yellow,
-      onPressed: () {
-        //Do whatever you want
+void customSnackbar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Align(alignment: Alignment.topCenter, child: Text(message)),
+      backgroundColor: Colors.teal,
+      behavior: SnackBarBehavior.floating,
+      width: 300,
+      duration: const Duration(seconds: 3),
+      action: SnackBarAction(
+        label: 'Dismiss',
+        disabledTextColor: Colors.white,
+        textColor: Colors.yellow,
+        onPressed: () {
+          //Do whatever you want
+        },
+      ),
+      onVisible: () {
+        //your code goes here
       },
     ),
-    onVisible: () {
-      //your code goes here
-    },
-  ));
+  );
 }
 
 class Validations {

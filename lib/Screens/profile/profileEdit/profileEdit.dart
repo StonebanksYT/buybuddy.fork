@@ -2,6 +2,7 @@
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/utils/btnDesigns.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_auth/Screens/utils/customField.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_auth/Screens/utils/screensUtils.dart';
 import 'package:get/get.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
-import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class EditProfileDialog extends StatefulWidget {
@@ -48,8 +48,6 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   late TextEditingController _languageController;
   late TextEditingController _instituteLocationController;
   late TextEditingController _profileImageController;
-  Controller controller = Get.put(Controller());
-  UserIdController userIdController = Get.find<UserIdController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -160,7 +158,7 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                         DatabaseReference userRef = FirebaseDatabase.instance
                             .ref()
                             .child("users")
-                            .child(userIdController.userid.value);
+                            .child(controller.userid.value);
                         await userRef.update({
                           'firstName': firstName,
                           'lastName': lastName,

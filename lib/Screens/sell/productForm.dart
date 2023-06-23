@@ -1,11 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/home/dashboard/productSection/firebaseStorage.dart';
-import 'package:flutter_auth/controllers/controllers.dart';
-import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 
 class ProductForm extends StatefulWidget {
@@ -22,10 +20,9 @@ class _ProductFormState extends State<ProductForm> {
 
   final TextEditingController descriptionController = TextEditingController();
 
-  final UserIdController userIdController = Get.put(UserIdController());
+ 
     final Storage storage = Storage();
 
-  Controller controller = Get.put(Controller());
   Uint8List? selectedFileInBytes=Uint8List(2);
   Future<void> filePicker()async{
   final results = await FilePicker.platform.pickFiles(
@@ -71,7 +68,7 @@ class _ProductFormState extends State<ProductForm> {
                   CollectionReference usersRef =
                       FirebaseFirestore.instance.collection('users');
                   DocumentReference userDocRef =
-                      usersRef.doc(userIdController.userid.value);
+                      usersRef.doc(controller.userid.value);
                   CollectionReference productsRef =
                       userDocRef.collection('products');
                   await productsRef.doc().set({

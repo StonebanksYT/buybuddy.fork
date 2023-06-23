@@ -1,6 +1,7 @@
 /// Personal Info includes User name, email,language, institute type, institute name, institute location,ways to contact
 
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/Screens/utils/textDesigns.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
@@ -9,7 +10,6 @@ import '../profileutils/profileConstants.dart';
 
 class PersonalInfo extends StatelessWidget {
   PersonalInfo({Key? key}) : super(key: key);
-  Controller controller = Get.put(Controller());
 
   @override
   Widget build(BuildContext context) {
@@ -189,3 +189,20 @@ class CustomCard extends StatelessWidget {
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
+// import 'package:flutter_auth/controllers/controllers.dart';
+// import 'package:get/get.dart';
+
+// class PersonalInfo extends StatelessWidget {
+//   PersonalInfo({Key? key}) : super(key: key);
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [Obx(() => Text(controller.userModel.value.instituteName))],
+//     );
+//   }
+// }

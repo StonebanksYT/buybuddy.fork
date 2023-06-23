@@ -3,13 +3,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/signUpEmailVerification.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
-import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:get/get.dart';
 
 class FirebaseSignUp {
   String emailAddress;
   String password;
-  UserIdController userIdController;
   String firstName;
   String lastName;
   String mobileNumber;
@@ -27,7 +25,7 @@ class FirebaseSignUp {
     required this.lastName,
     required this.mobileNumber,
     required this.password,
-    required this.userIdController,
+    
   });
   Controller controller = Get.find<Controller>();
   Future<void> firebaseSignUp() async {
@@ -40,7 +38,7 @@ class FirebaseSignUp {
       DatabaseReference userRef =
           FirebaseDatabase.instance.ref().child('users');
       String uid = credential.user!.uid;
-      userIdController.setUserId(uid);
+      controller.setUserId(uid);
       await userRef.child(uid).set({
         'firstName': firstName,
         'lastName': lastName,

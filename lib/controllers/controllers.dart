@@ -3,6 +3,10 @@ import 'package:flutter_auth/models/userModel.dart';
 import 'package:get/get.dart';
 
 class Controller extends GetxController {
+  RxString userid = "".obs;
+  void setUserId(String uid) {
+    userid.value = uid;
+  }
   Rx<UserModel> userModel = UserModel(
           firstName: "",
           lastName: "",
@@ -16,6 +20,7 @@ class Controller extends GetxController {
   setUserModel(UserModel model) {
     userModel.value = model;
   }
+  RxBool isObscure = true.obs;
 
   Rx<ProductModel> productModel =
       ProductModel(title: "", price: "", description: "", imageLink: []).obs;
@@ -47,9 +52,6 @@ class Controller extends GetxController {
   setProfileimg(String? value) {
     profileimg!.value = value!;
   }
-  // removeProfileimg(IconD value){
-  //   profileimg.value = "";
-  // }
 
   RxList categoryFilterList = [].obs;
   addCategoryFilterList(String value) {
@@ -68,5 +70,10 @@ class Controller extends GetxController {
   RxBool signUpLoading = false.obs;
   setsignUpLoading(bool value) {
     signUpLoading.value = value;
+  }
+  
+  RxInt visibilityIndex=0.obs;
+  void setVisibility(int index) {
+    visibilityIndex.value = index;
   }
 }

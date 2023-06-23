@@ -2,12 +2,13 @@
 
 // The form is wrapped in a SingleChildScrollView widget to allow for scrolling. The ElevatedButton widget is used to submit the form and authenticate the user. If the authentication is successful, the user is redirected to the HomePage widget. If there is an error, a customSnackBar is displayed to inform the user of the error.
 
+// ignore_for_file: unused_import
+
 // The LoginForm widget also uses the UserIdController to set the user ID after successful authentication. The GoogleConnect widget is also included to allow the user to sign in with their Google account.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseLogin.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
-import 'package:flutter_auth/controllers/userIdController.dart';
 import 'package:get/get.dart';
 import '../../home/home.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,15 +20,16 @@ class LoginForm extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
- final  UserIdController userIdController = Get.put(UserIdController());
- Controller controller=Get.put(Controller());
- var emailController = TextEditingController();
-    var passwordController = TextEditingController();
+
+  Controller controller = Get.put(Controller());
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  final bool _isObscure = true;
   @override
   Widget build(BuildContext context) {
     print("on login form");
     BuildContext SnackContext = context;
-    List firebaseLoginParameters=[emailController,passwordController,context,SnackContext,userIdController];
+    // List firebaseLoginParameters=[emailController,passwordController,context,SnackContext];
     return SizedBox(
       width: 410,
       child: Column(
@@ -44,7 +46,7 @@ class LoginForm extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              GoogleConnect(isLogin: true,onTap: (){})
+              GoogleConnect(isLogin: true, onTap: () {})
             ]),
           ),
           // Or element
@@ -90,7 +92,7 @@ class LoginForm extends StatelessWidget {
                       keyboardType: TextInputType.emailAddress,
                       controller: emailController,
                       textInputAction: TextInputAction.next),
-                  CustomTextField(
+                  PasswordField(
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'password is required.';
@@ -100,10 +102,7 @@ class LoginForm extends StatelessWidget {
                         return null;
                       },
                       width: 410,
-                      FieldName: "Password",
-                      isObscure: true,
-                      keyboardType: TextInputType.visiblePassword,
-                      controller: passwordController,
+                      passwordcontroller: passwordController,
                       textInputAction: TextInputAction.done),
                 ],
               ),
@@ -115,9 +114,15 @@ class LoginForm extends StatelessWidget {
           SizedBox(
             width: 80,
             height: 40,
-            child: ElevatedButton(onPressed: ()async{
-               controller.setloginLoading(true);
-                await FirebaseLogin(emailController: emailController, passwordController: passwordController, snackContext: SnackContext, context: context, userIdController: userIdController).firebaseLogin();
+            child: ElevatedButton(
+              onPressed: () async {
+                controller.setloginLoading(true);
+                await FirebaseLogin(
+                        emailController: emailController,
+                        passwordController: passwordController,
+                        context: SnackContext,
+                       )
+                    .firebaseLogin();
                 // if(auth.currentUser != null){
                 //   Navigator.push(context, MaterialPageRoute(builder: (ctx)=>const EmailVerificationScreen()));
                 // }
@@ -133,13 +138,14 @@ class LoginForm extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   backgroundColor: Colors.white,
                   shadowColor: Colors.white),
-              child: controller.loginLoading.value ? const CircularProgressIndicator():const  Text(
-                "Login",
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              ),
+              child: controller.loginLoading.value
+                  ? const CircularProgressIndicator()
+                  : const Text(
+                      "Login",
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
             ),
-  
           ),
           const SizedBox(
             height: 100,

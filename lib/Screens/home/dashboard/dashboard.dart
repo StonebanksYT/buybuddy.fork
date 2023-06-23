@@ -4,7 +4,10 @@ import 'package:flutter_auth/Screens/home/dashboard/productSection/productCard.d
 import 'package:flutter_auth/Screens/home/dashboard/productSection/productConstants.dart';
 import 'package:flutter_auth/Screens/home/homePageAppBar.dart';
 import 'package:flutter_auth/Screens/home/sideBarMenu.dart';
+import 'package:flutter_auth/controllers/controllers.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+Controller controller = Get.find<Controller>();
 
 class DashBoard extends StatelessWidget {
   const DashBoard({Key? key}) : super(key: key);

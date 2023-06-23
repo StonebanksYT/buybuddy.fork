@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/controllers/visibilityController.dart';
+import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
+import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
+import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'profileConstants.dart';
@@ -10,7 +12,6 @@ class ProfileInfo extends StatefulWidget {
 
 class _ProfileInfoState extends State<ProfileInfo> {
   int _selectedIndex = 0;
-  VisibilityController visibilityController = Get.put(VisibilityController());
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
           setState(() {
             _selectedIndex = index;
           });
-          visibilityController.setVisibility(index);
+          controller.setVisibility(index);
           onPressed;
         },
         style: ButtonStyle(

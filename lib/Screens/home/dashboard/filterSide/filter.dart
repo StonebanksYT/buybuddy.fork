@@ -1,5 +1,6 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/home/dashboard/filterSide/filterConstants.dart';
 import 'package:flutter_auth/colors.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_auth/controllers/controllers.dart';
 /// Category Filter Section
 class CategorySelectionPage extends StatelessWidget {
   /// using controller to maintain state of selected filters
- final Controller controller = Get.put(Controller());
 
   CategorySelectionPage({Key? key}) : super(key: key);
 
@@ -97,7 +97,6 @@ class CategorySelectionPage extends StatelessWidget {
 }
 
 class LocationFilterPage extends StatelessWidget {
-  final Controller controller = Get.put(Controller());
 
   LocationFilterPage({Key? key}) : super(key: key);
 
