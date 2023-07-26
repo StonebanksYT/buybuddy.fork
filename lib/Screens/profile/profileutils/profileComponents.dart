@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
+import 'package:flutter_auth/controllers/controllerCall.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

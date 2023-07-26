@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class FirebaseSignUp {
   String instituteType;
   String instituteName;
   String instituteLocation;
+  String address;
   BuildContext context;
   FirebaseSignUp({
     required this.context,
@@ -25,6 +27,7 @@ class FirebaseSignUp {
     required this.lastName,
     required this.mobileNumber,
     required this.password,
+    required this.address
     
   });
   Controller controller = Get.find<Controller>();
@@ -35,19 +38,38 @@ class FirebaseSignUp {
         email: emailAddress,
         password: password,
       );
-      DatabaseReference userRef =
-          FirebaseDatabase.instance.ref().child('users');
-      String uid = credential.user!.uid;
-      controller.setUserId(uid);
-      await userRef.child(uid).set({
-        'firstName': firstName,
-        'lastName': lastName,
-        'email': emailAddress,
-        'mobileNumber': mobileNumber,
-        'instituteType': controller.instituteType.value,
-        'instituteName': instituteName,
-        'instituteLocation': instituteLocation,
-      });
+      // DatabaseReference userRef =
+      //     FirebaseDatabase.instance.ref().child('users');
+      // String uid = credential.user!.uid;
+      // controller.setUserId(uid);
+      // await userRef.child(uid).set({
+      //   'firstName': firstName,
+      //   'lastName': lastName,
+      //   'email': emailAddress,
+      //   'mobileNumber': mobileNumber,
+      //   'instituteType': controller.instituteType.value,
+      //   'instituteName': instituteName,
+      //   'instituteLocation': instituteLocation,
+      // });
+      controller.setUserId(credential.user!.uid);
+                  CollectionReference usersRef =
+                      FirebaseFirestore.instance.collection('users');
+                  DocumentReference userDocRef =
+                      usersRef.doc(credential.user?.uid);
+                  await userDocRef.set({
+                    'uid': userDocRef.id,
+                    'firstName': firstName,
+                    'lastName': lastName,
+                    'email': emailAddress,
+                    'mobileNumber': mobileNumber,
+                    'instituteType': controller.instituteType.value,
+                    'instituteName': instituteName,
+                    'instituteLocation': instituteLocation,
+                    'address': address,
+                    
+                  });
+                  
+
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return const EmailVerificationScreen();
       }));

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/Screens/utils/textDesigns.dart';
+import 'package:flutter_auth/controllers/controllerCall.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
 import 'package:get/get.dart';
 import '../profileutils/profileConstants.dart';

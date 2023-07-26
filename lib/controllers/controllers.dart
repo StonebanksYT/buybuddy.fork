@@ -7,7 +7,10 @@ class Controller extends GetxController {
   void setUserId(String uid) {
     userid.value = uid;
   }
+
   Rx<UserModel> userModel = UserModel(
+          uid: "",
+          address: "",
           firstName: "",
           lastName: "",
           mobileNumber: "",
@@ -20,6 +23,7 @@ class Controller extends GetxController {
   setUserModel(UserModel model) {
     userModel.value = model;
   }
+
   RxBool isObscure = true.obs;
 
   Rx<ProductModel> productModel =
@@ -71,8 +75,8 @@ class Controller extends GetxController {
   setsignUpLoading(bool value) {
     signUpLoading.value = value;
   }
-  
-  RxInt visibilityIndex=0.obs;
+
+  RxInt visibilityIndex = 0.obs;
   void setVisibility(int index) {
     visibilityIndex.value = index;
   }

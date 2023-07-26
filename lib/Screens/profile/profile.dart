@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 import 'dart:html' as html;
-import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/profile/profileEdit/profileEdit.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseProfile.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
@@ -59,8 +58,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // Upload the selected image file to Firebase Storage and update the profile picture URL in the database
         await profileStorage().removeProfilePicture(currentProfilePictureUrl);
         profileStorage().saveProfilePictureUrl(profilePictureUrl);
-
-      
       } else {
         FilePickerResult? result = await FilePicker.platform.pickFiles(
           type: FileType.custom,
@@ -75,8 +72,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // String profilePictureUrl = await uploadProfilePicture(imageFile);
 
         profileStorage().saveProfilePictureUrl(profilePictureUrl);
-
-   
       }
     } catch (e) {
       print(e);
@@ -106,6 +101,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           controller.setUserModel(UserModel(
+              uid: dataMap["uid"],
+              address: dataMap["address"],
               firstName:
                   "${dataMap["firstName"][0].toUpperCase() + dataMap["firstName"].substring(1)}",
               lastName:
@@ -240,7 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("buyBuddy Account",
+                                    Text("BuyBuddy Account",
                                         style: GoogleFonts.getFont(
                                           "Nunito",
                                           textStyle: const TextStyle(
@@ -323,8 +320,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           width: 100,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              Navigator.pushNamed(
-                                                  context, '/');
+                                              Navigator.pushNamed(context, '/');
                                             },
                                             style: CustomElevatedBtnStyle(),
                                             child: Text("Sign Out",
@@ -399,8 +395,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     return Expanded(
                                         flex: 3,
                                         child: SingleChildScrollView(
-                                          child: pages[controller
-                                              .visibilityIndex.value],
+                                          child: pages[
+                                              controller.visibilityIndex.value],
                                         ));
                                   })
                                 ]),

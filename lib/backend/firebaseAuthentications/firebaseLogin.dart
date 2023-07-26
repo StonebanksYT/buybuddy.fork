@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/Screens/Login/components/login_form.dart';
 import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/utils/loginSignUpComponents.dart';
+import 'package:flutter_auth/controllers/controllerCall.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FirebaseLogin {
@@ -20,6 +22,8 @@ class FirebaseLogin {
           email: emailController.text.trim(),
           password: passwordController.text.trim());
       controller.setUserId(credential.user!.uid);
+      fetchUserModel(credential.user!.uid);
+      
       print(credential.user!.uid);
       Navigator.pushNamed(context, '/home');
       controller.setloginLoading(false);
