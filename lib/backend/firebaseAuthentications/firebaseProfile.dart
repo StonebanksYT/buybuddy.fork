@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
+import 'package:flutter_auth/controllers/controllerCall.dart';
 
 
 class profileStorage {

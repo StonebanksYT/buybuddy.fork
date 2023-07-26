@@ -8,12 +8,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/backend/firebaseAuthentications/firebaseLogin.dart';
+import 'package:flutter_auth/controllers/controllerCall.dart';
 import 'package:flutter_auth/controllers/controllers.dart';
+import 'package:flutter_auth/models/userModel.dart';
 import 'package:get/get.dart';
 import '../../home/home.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_auth/Screens/utils/customField.dart';
 import 'package:flutter_auth/Screens/utils/loginSignUpComponents.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({
@@ -153,5 +156,25 @@ class LoginForm extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+void fetchUserModel(String userId) async {
+  try {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    print(doc.data());
+    // Map<dynamic, dynamic> temp = doc.data() as Map<dynamic, dynamic>;
+    if (doc.exists) {
+      print("${doc.data().runtimeType}");
+      UserModel user = UserModel.fromFirestore(doc);
+      // Use the fetched UserModel object as needed
+      controller.setUserModel(user);
+      print("user set");
+      // controller.setUserEmail(userModel.email);
+    } else {
+      print('User document does not exist');
+    }
+  } catch (e) {
+    print('Error fetching UserModel: $e');
   }
 }

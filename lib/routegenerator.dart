@@ -5,12 +5,15 @@ import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter_auth/Screens/home/dashboard/dashboard.dart';
 import 'package:flutter_auth/Screens/home/home.dart';
 import 'package:flutter_auth/Screens/profile/profile.dart';
+import 'package:flutter_auth/checkloginstatus.dart';
 import 'package:flutter_svg/svg.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
+        return MaterialPageRoute(builder: (_) => const CheckLoginStatus());
+      case '/welcome':
         return MaterialPageRoute(builder: (_) => const WelcomeScreen());
       case '/home':
         return MaterialPageRoute(builder: (_) => const HomePage());
